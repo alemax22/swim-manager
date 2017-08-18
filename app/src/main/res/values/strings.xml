@@ -30,5 +30,7 @@
     <string name="level_two">2nd Level</string>
     <string name="level_three">3rd Level</string>
     <string name="level_four">4th Level</string>
+    <string name="action_save_user">Save</string>
+    <string name="action_delete_user">Delete</string>
 
 </resources>
