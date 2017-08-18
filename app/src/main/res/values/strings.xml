@@ -1,4 +1,34 @@
 <resources>
+    <!-- App's name -->
     <string name="app_name">Swim Manager</string>
+
+    <!-- Menu options -->
     <string name="action_settings">Settings</string>
+
+    <!-- Categories name of the UserEditorCategory -->
+    <string name="category_overview">Info</string>
+    <string name="category_gender">Gender</string>
+    <string name="category_date_of_birth">Date of Birth</string>
+    <string name="category_level">Level</string>
+
+    <!-- Hints for the fields inside the UserEditorCategory -->
+    <string name="hint_user_name">Name</string>
+    <string name="hint_user_surname">Surname</string>
+    <string name="hint_user_date_birth">dd-mm-yyyy</string>
+
+    <!-- Empty user list view -->
+    <string name="empty_user_list_msg">There aren\'t users yet</string>
+
+    <!-- Genders -->
+    <string name="gender_unknown">Unknown</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+
+    <!-- Levels -->
+    <string name="level_unknown">Unknown</string>
+    <string name="level_one">1st Level</string>
+    <string name="level_two">2nd Level</string>
+    <string name="level_three">3rd Level</string>
+    <string name="level_four">4th Level</string>
+
 </resources>
