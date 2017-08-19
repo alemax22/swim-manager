@@ -12,7 +12,8 @@
     <ListView
         android:id="@+id/users_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_user_list"/>
 
     <TextView
         android:id="@+id/text_empty_user_list"

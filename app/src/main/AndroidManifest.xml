@@ -20,8 +20,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".UserEditorActivity"
-            android:parentActivityName=".UserActivity" >
+        <activity
+            android:name=".UserEditorActivity"
+            android:parentActivityName=".UserActivity"
+            android:label="@string/activity_edit_user_label">
         </activity>
 
     </application>

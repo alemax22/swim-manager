@@ -32,5 +32,6 @@
     <string name="level_four">4th Level</string>
     <string name="action_save_user">Save</string>
     <string name="action_delete_user">Delete</string>
+    <string name="activity_edit_user_label">Edit User</string>
 
 </resources>

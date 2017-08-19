@@ -15,7 +15,7 @@
         android:fontFamily="sans-serif-medium"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="#2B3D4D"
-        tools:text="Alessandro Cattapan"/>
+        tools:text="Name Surname"/>
 
     <TextView
         android:id="@+id/text_user_age"
