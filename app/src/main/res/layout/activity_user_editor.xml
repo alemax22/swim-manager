@@ -2,7 +2,6 @@
 <LinearLayout
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -82,19 +81,18 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_date_of_birth"
+            android:text="@string/category_birthday"
             style="@style/CategoryStyle" />
 
         <!-- Input fields -->
         <!-- Date of Birth field -->
-        <EditText
+        <TextView
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:paddingLeft="4dp"
-            android:id="@+id/edit_user_date_birth"
-            android:hint="@string/hint_user_date_birth"
-            android:inputType="number"
+            android:id="@+id/edit_user_birthday"
+            tools:text="dd/mm/yyyy"
             style="@style/EditorFieldStyle" />
     </LinearLayout>
 

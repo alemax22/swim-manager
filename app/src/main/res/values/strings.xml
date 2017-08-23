@@ -8,13 +8,13 @@
     <!-- Categories name of the UserEditorCategory -->
     <string name="category_overview">Info</string>
     <string name="category_gender">Gender</string>
-    <string name="category_date_of_birth">Date of Birth</string>
+    <string name="category_birthday">Birthday</string>
     <string name="category_level">Level</string>
 
     <!-- Hints for the fields inside the UserEditorCategory -->
     <string name="hint_user_name">Name</string>
     <string name="hint_user_surname">Surname</string>
-    <string name="hint_user_date_birth">dd-mm-yyyy</string>
+    <string name="hint_user_birthday">dd/mm/yyyy</string>
 
     <!-- Empty user list view -->
     <string name="empty_user_list_msg">There aren\'t users yet</string>

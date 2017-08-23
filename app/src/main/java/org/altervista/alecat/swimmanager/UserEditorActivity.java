@@ -1,5 +1,8 @@
 package org.altervista.alecat.swimmanager;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,9 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
+
+import java.util.Calendar;
 
 /**
  * Created by Alessandro Cattapan on 18/08/2017.
@@ -26,6 +34,9 @@ public class UserEditorActivity extends AppCompatActivity {
     Spinner mLevelSpinner;
     int mLevel;
 
+    // Birthday EditText
+    TextView mBirthdayTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +45,22 @@ public class UserEditorActivity extends AppCompatActivity {
         // Initialize private variables
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
         mLevelSpinner = (Spinner) findViewById(R.id.spinner_level);
+        mBirthdayTextView = (TextView) findViewById(R.id.edit_user_birthday);
 
-        // Check the data input field
+        // Set an OnClickListener for the birthday's EditText
+        mBirthdayTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(view);
+            }
+        });
+
+        // Set the text inside the Birthday textView
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        mBirthdayTextView.setText(day + "/" + month + "/" + year);
 
         // Create and set spinners in the UI
         setupSpinner();
@@ -151,6 +176,35 @@ public class UserEditorActivity extends AppCompatActivity {
             }
         });
 
-
     }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+
+    // Inner class that create a picker or choosing the swimmer's birthday
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            // Update the View after the user selects the swimmer's birthday
+            EditText birthdayEdit = getActivity().findViewById(R.id.edit_user_birthday);
+            birthdayEdit.setText(day + "/" + month + "/" + year);
+        }
+    }
+
 }
