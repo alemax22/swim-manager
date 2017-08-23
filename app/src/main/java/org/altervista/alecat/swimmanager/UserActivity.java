@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Created by Alessandro Cattapan on 18/08/2017.
+ */
+
 public class UserActivity extends AppCompatActivity {
 
     @Override

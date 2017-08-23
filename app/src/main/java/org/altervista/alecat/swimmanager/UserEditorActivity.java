@@ -1,7 +1,5 @@
 package org.altervista.alecat.swimmanager;
 
-import android.content.DialogInterface;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import org.altervista.alecat.swimmanager.data.SwimmerContract;
+
+/**
+ * Created by Alessandro Cattapan on 18/08/2017.
+ */
 
 public class UserEditorActivity extends AppCompatActivity {
 
@@ -30,6 +34,8 @@ public class UserEditorActivity extends AppCompatActivity {
         // Initialize private variables
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
         mLevelSpinner = (Spinner) findViewById(R.id.spinner_level);
+
+        // Check the data input field
 
         // Create and set spinners in the UI
         setupSpinner();
@@ -90,11 +96,11 @@ public class UserEditorActivity extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.gender_male))) {
-                        mGender = 1; // Male
+                        mGender = SwimmerContract.GENDER_MALE; // Male
                     } else if (selection.equals(getString(R.string.gender_female))) {
-                        mGender = 2; // Female
+                        mGender = SwimmerContract.GENDER_FEMALE; // Female
                     } else {
-                        mGender = 0; // Unknown
+                        mGender = SwimmerContract.GENDER_UNKNOWN; // Unknown
                     }
                 }
             }
@@ -125,15 +131,15 @@ public class UserEditorActivity extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.level_one))) {
-                        mGender = 1; // 1st level
+                        mLevel = SwimmerContract.LEVEL_ONE; // 1st level
                     } else if (selection.equals(getString(R.string.level_two))) {
-                        mGender = 2; // 2nd level
+                        mLevel = SwimmerContract.LEVEL_TWO; // 2nd level
                     } else if (selection.equals(getString(R.string.level_three))) {
-                        mGender = 3; // 3rd level
+                        mLevel = SwimmerContract.LEVEL_THREE; // 3rd level
                     } else if (selection.equals(getString(R.string.level_four))) {
-                        mGender = 4; // 4th level
+                        mLevel = SwimmerContract.LEVEL_FOUR; // 4th level
                     } else {
-                        mGender = 0; // Unknown
+                        mLevel = SwimmerContract.LEVEL_UNKNOWN; // Unknown
                     }
                 }
             }
