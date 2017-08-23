@@ -45,7 +45,7 @@ public class UserEditorActivity extends AppCompatActivity {
         // Initialize private variables
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
         mLevelSpinner = (Spinner) findViewById(R.id.spinner_level);
-        mBirthdayTextView = (TextView) findViewById(R.id.edit_user_birthday);
+        mBirthdayTextView = (TextView) findViewById(R.id.text_user_birthday);
 
         // Set an OnClickListener for the birthday's EditText
         mBirthdayTextView.setOnClickListener(new View.OnClickListener() {
@@ -202,8 +202,8 @@ public class UserEditorActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             // Update the View after the user selects the swimmer's birthday
-            EditText birthdayEdit = getActivity().findViewById(R.id.edit_user_birthday);
-            birthdayEdit.setText(day + "/" + month + "/" + year);
+            TextView birthdayText = getActivity().findViewById(R.id.text_user_birthday);
+            birthdayText.setText(day + "/" + month + "/" + year);
         }
     }
 

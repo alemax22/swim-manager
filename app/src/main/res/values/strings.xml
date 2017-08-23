@@ -14,7 +14,6 @@
     <!-- Hints for the fields inside the UserEditorCategory -->
     <string name="hint_user_name">Name</string>
     <string name="hint_user_surname">Surname</string>
-    <string name="hint_user_birthday">dd/mm/yyyy</string>
 
     <!-- Empty user list view -->
     <string name="empty_user_list_msg">There aren\'t users yet</string>
