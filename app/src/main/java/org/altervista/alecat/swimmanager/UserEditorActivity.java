@@ -81,7 +81,7 @@ public class UserEditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                //TODO: Save the user
+                //TODO: Save the user through firebase real time database
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
