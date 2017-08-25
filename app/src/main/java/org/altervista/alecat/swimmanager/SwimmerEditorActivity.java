@@ -15,37 +15,60 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Alessandro Cattapan on 18/08/2017.
  */
 
-public class UserEditorActivity extends AppCompatActivity {
+public class SwimmerEditorActivity extends AppCompatActivity {
+
+    // TAG for log messages
+    private static final String TAG = SwimmerEditorActivity.class.getSimpleName();
 
     // Gender Spinner
-    Spinner mGenderSpinner;
-    int mGender;
+    private Spinner mGenderSpinner;
+    private int mGender;
 
     // Level Spinner
-    Spinner mLevelSpinner;
-    int mLevel;
+    private Spinner mLevelSpinner;
+    private int mLevel;
+
+    // Data fields
+    private EditText mNameEditText;
+    private EditText mSurnameEditText;
 
     // Birthday EditText
-    TextView mBirthdayTextView;
+    private TextView mBirthdayTextView;
+
+    // Firebase variables
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mFirebaseDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_editor);
+        setContentView(R.layout.activity_swimmer_editor);
 
         // Initialize private variables
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
         mLevelSpinner = (Spinner) findViewById(R.id.spinner_level);
-        mBirthdayTextView = (TextView) findViewById(R.id.text_user_birthday);
+        mBirthdayTextView = (TextView) findViewById(R.id.text_swimmer_birthday);
+        mNameEditText = (EditText) findViewById(R.id.edit_swimmer_name);
+        mSurnameEditText = (EditText) findViewById(R.id.edit_swimmer_surname);
+
+        // Initialize Firebase
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
 
         // Set an OnClickListener for the birthday's EditText
         mBirthdayTextView.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +93,7 @@ public class UserEditorActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
         // This adds menu items to the app bar.
-        getMenuInflater().inflate(R.menu.menu_user_editor, menu);
+        getMenuInflater().inflate(R.menu.menu_swimmer_editor, menu);
         return true;
     }
 
@@ -81,15 +104,16 @@ public class UserEditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                //TODO: Save the user through firebase real time database
+                saveSwimmer();
+                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
-                //TODO: Delete the user and warn the user about what he is doing
+                //TODO: Delete the swimmer and warn the swimmer about what he is doing
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // Navigate back to parent activity (UserActivity)
+                // Navigate back to parent activity (SwimmerActivity)
                 // TODO: Advice the user if he had made changes to the object and let him to choose what to do
                 finish();
                 return true;
@@ -97,8 +121,30 @@ public class UserEditorActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Add/modify swimmer's data
+    private void saveSwimmer(){
+        // Retrieve data from each fields in the Activity
+        String name = mNameEditText.getText().toString().trim();
+        String surname = mSurnameEditText.getText().toString().trim();
+        int gender = mGender;
+        int level = mLevel;
+        String birthday = mBirthdayTextView.getText().toString().trim();
+
+        Swimmer swimmer = new Swimmer(name, surname, birthday, gender,level);
+
+        // Put this value inside the database
+        Task task = mFirebaseDatabaseReference.push().setValue(swimmer);
+
+        if (task != null){
+            // The swimmer is successfully saved
+            Toast.makeText(getApplicationContext(), R.string.swimmer_saved, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.swimmer_not_saved, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
-     * Setup the dropdown spinner that allows the user to select the gender of the user.
+     * Setup the dropdown spinner that allows the user to select the gender of the swimmer.
      */
     private void setupSpinner() {
 
@@ -202,7 +248,17 @@ public class UserEditorActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             // Update the View after the user selects the swimmer's birthday
-            TextView birthdayText = getActivity().findViewById(R.id.text_user_birthday);
+            TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
+            Calendar calendar = new GregorianCalendar(year, month, day);
+
+            // Date expressed in milliseconds
+            calendar.getTimeInMillis();
+
+            month++;
+
+            // Set a patter for the date
+            // SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/YYYY");
+            // String dateToDisplay = dateFormatter.format(calendar);
             birthdayText.setText(day + "/" + month + "/" + year);
         }
     }

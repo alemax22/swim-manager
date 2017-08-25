@@ -8,7 +8,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/text_user_name_surname"
+        android:id="@+id/text_swimmer_name_surname"
         android:layout_weight="7"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         tools:text="Name Surname"/>
 
     <TextView
-        android:id="@+id/text_user_age"
+        android:id="@+id/text_swimmer_age"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:gravity="right"

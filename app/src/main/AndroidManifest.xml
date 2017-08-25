@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".UserActivity"
+            android:name=".SwimmerActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,9 +21,9 @@
         </activity>
 
         <activity
-            android:name=".UserEditorActivity"
-            android:parentActivityName=".UserActivity"
-            android:label="@string/activity_edit_user_label">
+            android:name=".SwimmerEditorActivity"
+            android:parentActivityName=".SwimmerActivity"
+            android:label="@string/activity_edit_swimmer_label">
         </activity>
 
     </application>

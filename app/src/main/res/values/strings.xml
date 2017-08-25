@@ -12,11 +12,11 @@
     <string name="category_level">Level</string>
 
     <!-- Hints for the fields inside the UserEditorCategory -->
-    <string name="hint_user_name">Name</string>
-    <string name="hint_user_surname">Surname</string>
+    <string name="hint_swimmer_name">Name</string>
+    <string name="hint_swimmer_surname">Surname</string>
 
-    <!-- Empty user list view -->
-    <string name="empty_user_list_msg">There aren\'t users yet</string>
+    <!-- Empty swimmer list view -->
+    <string name="empty_swimmer_list_msg">There aren\'t users yet</string>
 
     <!-- Genders -->
     <string name="gender_unknown">Unknown</string>
@@ -29,8 +29,10 @@
     <string name="level_two">2nd Level</string>
     <string name="level_three">3rd Level</string>
     <string name="level_four">4th Level</string>
-    <string name="action_save_user">Save</string>
-    <string name="action_delete_user">Delete</string>
-    <string name="activity_edit_user_label">Edit User</string>
+    <string name="action_save_swimmer">Save</string>
+    <string name="action_delete_swimmer">Delete</string>
+    <string name="activity_edit_swimmer_label">Edit User</string>
+    <string name="swimmer_saved">User Saved</string>
+    <string name="swimmer_not_saved">User NOT Saved</string>
 
 </resources>

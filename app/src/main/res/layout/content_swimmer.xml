@@ -6,20 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".UserActivity"
-    tools:showIn="@layout/activity_user">
+    tools:context=".SwimmerActivity"
+    tools:showIn="@layout/activity_swimmer">
 
     <ListView
-        android:id="@+id/users_list_view"
+        android:id="@+id/swimmer_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_user_list"/>
+        tools:listitem="@layout/item_swimmer_list"/>
 
     <TextView
-        android:id="@+id/text_empty_user_list"
+        android:id="@+id/text_empty_swimmer_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/empty_user_list_msg"/>
+        android:text="@string/empty_swimmer_list_msg"/>
 
 </RelativeLayout>
