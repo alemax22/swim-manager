@@ -23,7 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -80,10 +83,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         // Set the text inside the Birthday textView
         final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        mBirthdayTextView.setText(day + "/" + month + "/" + year);
+        mBirthdayTextView.setText(displayDate(calendar));
 
         // Create and set spinners in the UI
         setupSpinner();
@@ -179,7 +179,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mGender = 0; // Unknown
+                mGender = SwimmerContract.GENDER_UNKNOWN; // Unknown
             }
         });
 
@@ -218,7 +218,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mLevel = 0; // Unknown
+                mLevel = SwimmerContract.LEVEL_UNKNOWN; // Unknown
             }
         });
 
@@ -235,8 +235,13 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
+            // Use the selected date as the default date in the picker
+            TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+            ParsePosition parsePosition = new ParsePosition(0);
+            Date date = dateFormatter.parse(birthdayText.getText().toString(), parsePosition);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
@@ -251,16 +256,21 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
             Calendar calendar = new GregorianCalendar(year, month, day);
 
-            // Date expressed in milliseconds
-            calendar.getTimeInMillis();
-
-            month++;
-
-            // Set a patter for the date
-            // SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/YYYY");
-            // String dateToDisplay = dateFormatter.format(calendar);
-            birthdayText.setText(day + "/" + month + "/" + year);
+            // Display the date inside the TextView
+            birthdayText.setText(displayDate(calendar));
         }
+    }
+
+    // This method returns the String date to display in the TextView field
+    private static String displayDate(Calendar calendar){
+        // Get a Date Object
+        Date selectedDate = calendar.getTime();
+
+        // Set a patter for the date
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+        String dateToDisplay = dateFormatter.format(selectedDate);
+
+        return dateToDisplay;
     }
 
 }
