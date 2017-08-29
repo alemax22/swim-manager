@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -49,13 +53,15 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private String mUsername;
 
-    // Private variables
-    private SwimmerAdapter mSwimmerAdapter;
-    private ListView mSwimmerListView;
+    // RecyclerView
+    private RecyclerView mSwimmerRecyclerView;
+    private FirebaseRecyclerAdapter mSwimmerRecyclerAdapter;
+
+    // ProgressBar
     private ProgressBar mProgressBar; //TODO: Implement the progress bar when the swimmer is waiting for loading new data
 
     // Firebase variables
-    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseDatabase; // Do I keep two separated variables?
     private DatabaseReference mSwimmerInfoDatabaseReference;
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
@@ -71,30 +77,45 @@ public class SwimmerActivity extends AppCompatActivity {
 
         mUsername = ANONYMOUS;
 
-        // initialize Firebase components
+        // Progress Bar
+        mProgressBar = (ProgressBar) findViewById(R.id.swimmer_progress_bar);
+        mProgressBar.setVisibility(View.GONE);
+
+        // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        // Initialize private variables
-        mSwimmerListView = (ListView) findViewById(R.id.swimmer_list_view);
+        // Initialize private variables, initialize swimmer RecyclerView and its adapter
+        mSwimmerRecyclerView = (RecyclerView) findViewById(R.id.swimmer_recycle_view);
+        mSwimmerRecyclerView.setHasFixedSize(true);
+        mSwimmerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mSwimmerRecyclerAdapter = new SwimmerRecyclerAdapter(Swimmer.class,
+                R.layout.item_swimmer_list,
+                SwimmerHolder.class,
+                mSwimmerInfoDatabaseReference);
+        mSwimmerRecyclerView.setAdapter(mSwimmerRecyclerAdapter);
 
-        // Initialize swimmer ListView and its adapter
-        List<Swimmer> swimmers = new ArrayList();
-        mSwimmerAdapter = new SwimmerAdapter(this, R.layout.item_swimmer_list, swimmers);
-        mSwimmerListView.setAdapter(mSwimmerAdapter);
+        // Set action listener on the recyclerView
+        mSwimmerRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, mSwimmerRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // Open SwimmerEditor Activity
+                        DatabaseReference reference = mSwimmerRecyclerAdapter.getRef(position);
+                        Intent intent = new Intent(SwimmerActivity.this, SwimmerEditorActivity.class);
+                        intent.putExtra("reference", reference.toString());
+                        startActivity(intent);
+                    }
 
-        // Set onItemClickListener
-        mSwimmerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    @Override public void onLongItemClick(View view, int position) {
+                        //TODO: Delete swimmers
+                        mSwimmerRecyclerAdapter.getRef(position).removeValue();
+                    }
+                })
+        );
 
-            }
-        });
-
-        // Set the view that has to be shown when the listView is empty
+        // TODO: Set the view that has to be shown when the listView is empty
         View emptyListView = findViewById(R.id.text_empty_swimmer_list);
-        mSwimmerListView.setEmptyView(emptyListView);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -134,13 +155,11 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(String username){
         mUsername = username;
-        attachDatabaseReadListener();
     }
+
 
     private void onSignedOutCleanup(){
         mUsername = ANONYMOUS;
-        mSwimmerAdapter.clear();
-        detachDatabaseReadListener();
     }
 
     @Override
@@ -181,44 +200,6 @@ public class SwimmerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Add a child listener to the database so it can update the UI when there
-    // are changes inside the database
-    private void attachDatabaseReadListener(){
-        if (mChildEventListener == null) {
-            mChildEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Swimmer swimmer = dataSnapshot.getValue(Swimmer.class);
-                    mSwimmerAdapter.add(swimmer);
-                }
-
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            mSwimmerInfoDatabaseReference.addChildEventListener(mChildEventListener);
-        }
-    }
-
-    // Remove the child listener from the database
-    private void detachDatabaseReadListener(){
-        if (mChildEventListener != null) {
-            mSwimmerInfoDatabaseReference.removeEventListener(mChildEventListener);
-            mChildEventListener = null;
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -230,7 +211,11 @@ public class SwimmerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-        detachDatabaseReadListener();
-        mSwimmerAdapter.clear();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSwimmerRecyclerAdapter.cleanup();
     }
 }

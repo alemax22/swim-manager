@@ -9,10 +9,11 @@
     tools:context=".SwimmerActivity"
     tools:showIn="@layout/activity_swimmer">
 
-    <ListView
-        android:id="@+id/swimmer_list_view"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/swimmer_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="vertical"
         tools:listitem="@layout/item_swimmer_list"/>
 
     <TextView
@@ -21,5 +22,11 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/empty_swimmer_list_msg"/>
+
+    <ProgressBar
+        android:id="@+id/swimmer_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
