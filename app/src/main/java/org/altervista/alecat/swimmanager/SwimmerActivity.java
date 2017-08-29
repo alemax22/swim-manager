@@ -160,6 +160,7 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private void onSignedOutCleanup(){
         mUsername = ANONYMOUS;
+        mSwimmerRecyclerAdapter.cleanup();
     }
 
     @Override
