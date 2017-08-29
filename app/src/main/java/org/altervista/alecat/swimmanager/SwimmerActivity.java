@@ -108,7 +108,7 @@ public class SwimmerActivity extends AppCompatActivity {
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        //TODO: Delete swimmers
+                        //TODO: Delete swimmer
                         mSwimmerRecyclerAdapter.getRef(position).removeValue();
                     }
                 })
