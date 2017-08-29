@@ -29,10 +29,17 @@
     <string name="level_two">2nd Level</string>
     <string name="level_three">3rd Level</string>
     <string name="level_four">4th Level</string>
+
+    <!-- Menu options -->
     <string name="action_save_swimmer">Save</string>
     <string name="action_delete_swimmer">Delete</string>
+    <string name="action_sign_out">Sign Out</string>
+
+    <!-- Toast messages -->
     <string name="activity_edit_swimmer_label">Edit User</string>
     <string name="swimmer_saved">User Saved</string>
     <string name="swimmer_not_saved">User NOT Saved</string>
+    <string name="signed_in_msg">Signed in!</string>
+    <string name="signed_in_canceled_msg">Signed in canceled</string>
 
 </resources>

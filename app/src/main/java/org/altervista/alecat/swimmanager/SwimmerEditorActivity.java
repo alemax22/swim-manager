@@ -2,6 +2,7 @@ package org.altervista.alecat.swimmanager;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -55,7 +59,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
     // Firebase variables
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mFirebaseDatabaseReference;
+    private DatabaseReference mSwimmerInfoDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,8 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         // Initialize Firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
+        mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
+
 
         // Set an OnClickListener for the birthday's EditText
         mBirthdayTextView.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +89,10 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         // Set the text inside the Birthday textView
         final Calendar calendar = Calendar.getInstance();
         mBirthdayTextView.setText(displayDate(calendar));
+
+        // Change the label of the activity
+        Intent intent = getIntent();
+        //mUri = intent.getData();
 
         // Create and set spinners in the UI
         setupSpinner();
@@ -133,7 +142,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         Swimmer swimmer = new Swimmer(name, surname, birthday, gender,level);
 
         // Put this value inside the database
-        Task task = mFirebaseDatabaseReference.push().setValue(swimmer);
+        Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer);
 
         if (task != null){
             // The swimmer is successfully saved
@@ -238,8 +247,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             // Use the selected date as the default date in the picker
             TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
             SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
-            ParsePosition parsePosition = new ParsePosition(0);
-            Date date = dateFormatter.parse(birthdayText.getText().toString(), parsePosition);
+            Date date = dateFormatter.parse(birthdayText.getText().toString(), new ParsePosition(0));
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             int year = c.get(Calendar.YEAR);
@@ -272,5 +280,4 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         return dateToDisplay;
     }
-
 }

@@ -72,12 +72,13 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Measurement category -->
+    <!-- Birthday category -->
     <LinearLayout
         android:id="@+id/container_measurement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
 
         <!-- Label -->
         <TextView
@@ -85,7 +86,7 @@
             style="@style/CategoryStyle" />
 
         <!-- Input fields -->
-        <!-- Date of Birth field -->
+        <!-- Birthday field -->
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="0dp"

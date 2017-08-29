@@ -28,8 +28,12 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.0.1'
 
-    //Firebase
-    compile 'com.google.firebase:firebase-database:11.2.0'
+    // Firebase database and authentication
+    compile 'com.google.firebase:firebase-database:11.0.4'
+    compile 'com.google.firebase:firebase-auth:11.0.4'
+
+    // Firebase UI
+    compile 'com.firebaseui:firebase-ui:2.3.0'
 
     testCompile 'junit:junit:4.12'
 }
