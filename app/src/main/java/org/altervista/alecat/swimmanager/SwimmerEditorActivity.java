@@ -3,6 +3,7 @@ package org.altervista.alecat.swimmanager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,9 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,6 +39,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
     // TAG for log messages
     private static final String TAG = SwimmerEditorActivity.class.getSimpleName();
+    private Uri mUri;
 
     // Gender Spinner
     private Spinner mGenderSpinner;
@@ -92,8 +91,14 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         // Change the label of the activity
         Intent intent = getIntent();
-        //mUri = intent.getData();
+        mUri = intent.getData();
 
+        // Change Activity label
+        if (mUri != null) {
+
+        } else {
+
+        }
         // Create and set spinners in the UI
         setupSpinner();
     }

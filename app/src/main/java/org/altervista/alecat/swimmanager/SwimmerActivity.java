@@ -14,31 +14,20 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+
 
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+
 
 /**
  * Created by Alessandro Cattapan on 18/08/2017.
@@ -77,22 +66,21 @@ public class SwimmerActivity extends AppCompatActivity {
         mUsername = ANONYMOUS;
 
         // Initialize Firebase components
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance(); // Do I keep two different variables??
         mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         // Initialize private variables
         mSwimmerListView = (ListView) findViewById(R.id.swimmer_list_view);
 
-        // Initialize swimmer ListView and its adapter
-        mSwimmerAdapter = new SwimmerAdapter(this, Swimmer.class, R.layout.item_swimmer_list, mSwimmerInfoDatabaseReference);
-        mSwimmerListView.setAdapter(mSwimmerAdapter);
-
         // Set onItemClickListener
         mSwimmerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String reference = mSwimmerAdapter.getRef(i).toString();
+                Log.v(TAG, "Reference: " + reference);
                 Intent intent =  new Intent(SwimmerActivity.this, SwimmerEditorActivity.class);
+                intent.setData(Uri.parse(reference));
                 startActivity(intent);
             }
         });
@@ -140,11 +128,20 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(String username){
         mUsername = username;
+        // Initialize swimmer ListView and its adapter
+        mSwimmerAdapter = new SwimmerAdapter(this,
+                Swimmer.class,
+                R.layout.item_swimmer_list,
+                mSwimmerInfoDatabaseReference);
+        mSwimmerListView.setAdapter(mSwimmerAdapter);
+
     }
 
     private void onSignedOutCleanup(){
         mUsername = ANONYMOUS;
-        mSwimmerAdapter.cleanup();
+        if (mSwimmerAdapter != null){
+            mSwimmerAdapter.cleanup();
+        }
     }
 
     @Override

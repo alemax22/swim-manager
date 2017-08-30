@@ -14,11 +14,12 @@ import org.joda.time.PeriodType;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by Alessandro Cattapan on 30/08/2017.
+ * For more information about FirebaseListAdapter visit:
+ * https://github.com/firebase/AndroidChat/blob/master/app/src/main/java/com/firebase/androidchat/FirebaseListAdapter.java
  */
 
 public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
