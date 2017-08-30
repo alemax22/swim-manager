@@ -14,9 +14,11 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,8 +32,12 @@ import com.google.firebase.storage.UploadTask;
 
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,14 +56,13 @@ public class SwimmerActivity extends AppCompatActivity {
     private String mUsername;
 
     // Private variables
-    private SwimmerAdapter mSwimmerAdapter;
+    private FirebaseListAdapter mSwimmerAdapter;
     private ListView mSwimmerListView;
     private ProgressBar mProgressBar; //TODO: Implement the progress bar when the swimmer is waiting for loading new data
 
     // Firebase variables
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mSwimmerInfoDatabaseReference;
-    private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -71,7 +76,7 @@ public class SwimmerActivity extends AppCompatActivity {
 
         mUsername = ANONYMOUS;
 
-        // initialize Firebase components
+        // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -80,8 +85,7 @@ public class SwimmerActivity extends AppCompatActivity {
         mSwimmerListView = (ListView) findViewById(R.id.swimmer_list_view);
 
         // Initialize swimmer ListView and its adapter
-        List<Swimmer> swimmers = new ArrayList();
-        mSwimmerAdapter = new SwimmerAdapter(this, R.layout.item_swimmer_list, swimmers);
+        mSwimmerAdapter = new SwimmerAdapter(this, Swimmer.class, R.layout.item_swimmer_list, mSwimmerInfoDatabaseReference);
         mSwimmerListView.setAdapter(mSwimmerAdapter);
 
         // Set onItemClickListener
@@ -136,13 +140,11 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(String username){
         mUsername = username;
-        attachDatabaseReadListener();
     }
 
     private void onSignedOutCleanup(){
         mUsername = ANONYMOUS;
-        mSwimmerAdapter.clear();
-        detachDatabaseReadListener();
+        mSwimmerAdapter.cleanup();
     }
 
     @Override
@@ -183,44 +185,6 @@ public class SwimmerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Add a child listener to the database so it can update the UI when there
-    // are changes inside the database
-    private void attachDatabaseReadListener(){
-        if (mChildEventListener == null) {
-            mChildEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Swimmer swimmer = dataSnapshot.getValue(Swimmer.class);
-                    mSwimmerAdapter.add(swimmer);
-                }
-
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            mSwimmerInfoDatabaseReference.addChildEventListener(mChildEventListener);
-        }
-    }
-
-    // Remove the child listener from the database
-    private void detachDatabaseReadListener(){
-        if (mChildEventListener != null) {
-            mSwimmerInfoDatabaseReference.removeEventListener(mChildEventListener);
-            mChildEventListener = null;
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -237,7 +201,6 @@ public class SwimmerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        detachDatabaseReadListener();
-        mSwimmerAdapter.clear();
+        mSwimmerAdapter.cleanup();
     }
 }
