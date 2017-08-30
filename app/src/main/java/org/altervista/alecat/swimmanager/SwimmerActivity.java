@@ -88,7 +88,8 @@ public class SwimmerActivity extends AppCompatActivity {
         mSwimmerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                Intent intent =  new Intent(SwimmerActivity.this, SwimmerEditorActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -131,6 +132,7 @@ public class SwimmerActivity extends AppCompatActivity {
             }
         };
     }
+
 
     private void onSignedInInitialize(String username){
         mUsername = username;
@@ -230,6 +232,11 @@ public class SwimmerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         detachDatabaseReadListener();
         mSwimmerAdapter.clear();
     }
