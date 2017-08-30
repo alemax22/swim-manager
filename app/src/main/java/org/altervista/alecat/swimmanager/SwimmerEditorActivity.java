@@ -20,8 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
@@ -95,12 +98,61 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         // Change Activity label
         if (mUri != null) {
-
+            setTitle(R.string.activity_edit_swimmer_label);
+            loadSwimmer();
         } else {
-
+            setTitle(R.string.activity_add_swimmer_label);
         }
         // Create and set spinners in the UI
         setupSpinner();
+    }
+
+    private void loadSwimmer(){
+        mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Updates fields
+                Swimmer currentSwimmer = dataSnapshot.getValue(Swimmer.class);
+                mNameEditText.setText(currentSwimmer.getName());
+                mSurnameEditText.setText(currentSwimmer.getSurname());
+                mBirthdayTextView.setText(currentSwimmer.getBirthday());
+
+                // Set gender
+                switch (currentSwimmer.getGender()){
+                    case SwimmerContract.GENDER_MALE:
+                        mGenderSpinner.setSelection(1);
+                        break;
+                    case SwimmerContract.GENDER_FEMALE:
+                        mGenderSpinner.setSelection(2);
+                        break;
+                    default:
+                        mGenderSpinner.setSelection(0);
+                }
+
+                // Set Level
+                switch (currentSwimmer.getLevel()){
+                    case SwimmerContract.LEVEL_ONE:
+                        mLevelSpinner.setSelection(1);
+                        break;
+                    case SwimmerContract.LEVEL_TWO:
+                        mLevelSpinner.setSelection(2);
+                        break;
+                    case SwimmerContract.LEVEL_THREE:
+                        mLevelSpinner.setSelection(3);
+                        break;
+                    case SwimmerContract.LEVEL_FOUR:
+                        mLevelSpinner.setSelection(4);
+                        break;
+                    default:
+                        mLevelSpinner.setSelection(0);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // TODO: Do something
+            }
+        });
     }
 
     @Override
@@ -111,6 +163,18 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // Set invisible "delete action" when the user is adding a new swimmer
+        if(mUri == null){
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -123,7 +187,8 @@ public class SwimmerEditorActivity extends AppCompatActivity {
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
-                //TODO: Delete the swimmer and warn the swimmer about what he is doing
+                deleteSwimmer();
+                finish();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -143,18 +208,41 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         int gender = mGender;
         int level = mLevel;
         String birthday = mBirthdayTextView.getText().toString().trim();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+        String today = dateFormatter.format(new Date());
+
+        // If there isn't any change inside the Activity simply reurn to the main activity
+        // without doing anything
+        if (mUri == null && TextUtils.isEmpty(name) && TextUtils.isEmpty(surname) && birthday.equals(today)
+                && gender == SwimmerContract.GENDER_UNKNOWN && level == SwimmerContract.LEVEL_UNKNOWN){
+            return;
+        }
 
         Swimmer swimmer = new Swimmer(name, surname, birthday, gender,level);
-
-        // Put this value inside the database
-        Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer);
-
-        if (task != null){
-            // The swimmer is successfully saved
-            Toast.makeText(getApplicationContext(), R.string.swimmer_saved, Toast.LENGTH_SHORT).show();
+        if (mUri != null){
+            Task task = mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).updateChildren(swimmer.toMap()); // TODO: Implement DatabaseReference.CompletionListener listener
+            if (task != null){
+                // The swimmer is successfully updated
+                Toast.makeText(getApplicationContext(), R.string.swimmer_updated, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.swimmer_not_updated, Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(getApplicationContext(), R.string.swimmer_not_saved, Toast.LENGTH_SHORT).show();
+            // Put this value inside the database
+            Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer);
+
+            if (task != null){
+                // The swimmer is successfully saved
+                Toast.makeText(getApplicationContext(), R.string.swimmer_saved, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.swimmer_not_saved, Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    // Delete Swimmer
+    private void deleteSwimmer(){
+        mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).removeValue();
     }
 
     /**

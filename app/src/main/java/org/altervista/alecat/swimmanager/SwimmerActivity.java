@@ -50,11 +50,10 @@ public class SwimmerActivity extends AppCompatActivity {
     private ProgressBar mProgressBar; //TODO: Implement the progress bar when the swimmer is waiting for loading new data
 
     // Firebase variables
-    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseDatabase; // Do I keep two different variables??
     private DatabaseReference mSwimmerInfoDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class SwimmerActivity extends AppCompatActivity {
         mUsername = ANONYMOUS;
 
         // Initialize Firebase components
-        mFirebaseDatabase = FirebaseDatabase.getInstance(); // Do I keep two different variables??
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
         mFirebaseAuth = FirebaseAuth.getInstance();
 

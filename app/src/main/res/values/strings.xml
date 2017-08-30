@@ -44,5 +44,7 @@
     <string name="swimmer_not_saved">User NOT Saved</string>
     <string name="signed_in_msg">Signed in!</string>
     <string name="signed_in_canceled_msg">Signed in canceled</string>
+    <string name="swimmer_updated">User Updated</string>
+    <string name="swimmer_not_updated">User NOT Updated</string>
 
 </resources>
