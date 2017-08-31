@@ -1,6 +1,8 @@
 package org.altervista.alecat.swimmanager;
 
 import android.content.Intent;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -47,7 +50,8 @@ public class SwimmerActivity extends AppCompatActivity {
     // Private variables
     private FirebaseListAdapter mSwimmerAdapter;
     private ListView mSwimmerListView;
-    private ProgressBar mProgressBar; //TODO: Implement the progress bar when the swimmer is waiting for loading new data
+    private ProgressBar mProgressBar;
+    private View mEmptyListTextView;
 
     // Firebase variables
     private FirebaseDatabase mFirebaseDatabase; // Do I keep two different variables??
@@ -85,9 +89,11 @@ public class SwimmerActivity extends AppCompatActivity {
         });
 
         // Set the view that has to be shown when the listView is empty
-        View emptyListView = findViewById(R.id.text_empty_swimmer_list);
-        mSwimmerListView.setEmptyView(emptyListView);
+        mEmptyListTextView = findViewById(R.id.text_empty_swimmer_list);
 
+        // Progress Bar for data Loading
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -127,13 +133,28 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(String username){
         mUsername = username;
+
+        // Useful for progress bar
+        DataSetObserver observer = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+                // Hide the progress bar because data loading is finished
+                mProgressBar.setVisibility(View.GONE);
+
+                // Set the view to show when the ListView is empty
+                mSwimmerListView.setEmptyView(mEmptyListTextView);
+            }
+        };
+
         // Initialize swimmer ListView and its adapter
         mSwimmerAdapter = new SwimmerAdapter(this,
                 Swimmer.class,
                 R.layout.item_swimmer_list,
                 mSwimmerInfoDatabaseReference);
+        mSwimmerAdapter.registerDataSetObserver(observer);
         mSwimmerListView.setAdapter(mSwimmerAdapter);
-
     }
 
     private void onSignedOutCleanup(){

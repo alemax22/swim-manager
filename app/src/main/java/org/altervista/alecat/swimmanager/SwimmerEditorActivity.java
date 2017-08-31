@@ -2,14 +2,19 @@ package org.altervista.alecat.swimmanager;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -63,6 +68,16 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mSwimmerInfoDatabaseReference;
 
+    //Check if there are changes in data
+    private boolean mSwimmerHasChanged =  false;
+    View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            mSwimmerHasChanged = true;
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +89,13 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         mBirthdayTextView = (TextView) findViewById(R.id.text_swimmer_birthday);
         mNameEditText = (EditText) findViewById(R.id.edit_swimmer_name);
         mSurnameEditText = (EditText) findViewById(R.id.edit_swimmer_surname);
+
+        // Set onTouchListener
+        mGenderSpinner.setOnTouchListener(mTouchListener);
+        mLevelSpinner.setOnTouchListener(mTouchListener);
+        mBirthdayTextView.setOnTouchListener(mTouchListener);
+        mNameEditText.setOnTouchListener(mTouchListener);
+        mSurnameEditText.setOnTouchListener(mTouchListener);
 
         // Initialize Firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -150,7 +172,8 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // TODO: Do something
+                // There is an error
+                Log.e(TAG, "Error during Swimmer update: " + databaseError);
             }
         });
     }
@@ -187,17 +210,43 @@ public class SwimmerEditorActivity extends AppCompatActivity {
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
-                deleteSwimmer();
-                finish();
+                showDeleteConfirmationDialog();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // Navigate back to parent activity (SwimmerActivity)
                 // TODO: Advice the user if he had made changes to the object and let him to choose what to do
-                finish();
+                if (!mSwimmerHasChanged){
+                    NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                }
+                DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        NavUtils.navigateUpFromSameTask(SwimmerEditorActivity.this);
+                    }
+                };
+                showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Shows the dialog when the user wants to go back even though there are some changes unsaved
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.discard_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard_dialog, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editig_dialog, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null){
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     // Add/modify swimmer's data
@@ -243,6 +292,49 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     // Delete Swimmer
     private void deleteSwimmer(){
         mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).removeValue();
+    }
+
+    // Show delete confirmation Dialog
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the postivie and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_swimmer_dialog_msg);
+        builder.setPositiveButton(R.string.delete_dialog, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the swimmer.
+                deleteSwimmer();
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel_dialog, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the swimmer.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mSwimmerHasChanged){
+            super.onBackPressed();
+            return;
+        }
+        DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        };
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     /**

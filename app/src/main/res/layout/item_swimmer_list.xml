@@ -8,25 +8,58 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/text_swimmer_name_surname"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="7"
+        android:id="@+id/initial_letter"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/swimmer_circle"
         android:fontFamily="sans-serif-medium"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#2B3D4D"
-        tools:text="Name Surname" />
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        tools:text="ns"
+        android:layout_marginRight="16dp"/>
 
-    <TextView
-        android:id="@+id/text_swimmer_age"
-        android:layout_weight="1"
+    <LinearLayout
         android:layout_width="0dp"
-        android:gravity="right"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#AEB6BD"
-        tools:text="21"
+        android:orientation="vertical"
+        android:layout_weight="7">
+        <TextView
+            android:id="@+id/text_swimmer_name_surname"
+            android:layout_width="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="sans-serif-medium"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#2B3D4D"
+            tools:text="Name Surname" />
+
+        <TextView
+            android:id="@+id/text_swimmer_age"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#AEB6BD"
+            tools:text="21"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_marginLeft="16dp"
+        android:id="@+id/birthday_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="invisible"
+        android:src="@drawable/ic_birthday"
+        android:layout_gravity="center_vertical"
         />
 
 </LinearLayout>
