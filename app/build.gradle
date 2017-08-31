@@ -35,6 +35,9 @@ dependencies {
     // Firebase UI
     compile 'com.firebaseui:firebase-ui:2.3.0'
 
+    // Joda Time
+    compile 'joda-time:joda-time:2.9.9'
+
     testCompile 'junit:junit:4.12'
 }
 

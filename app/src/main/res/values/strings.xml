@@ -35,11 +35,22 @@
     <string name="action_delete_swimmer">Delete</string>
     <string name="action_sign_out">Sign Out</string>
 
-    <!-- Toast messages -->
+    <!-- SwimEditorActivity's labels -->
     <string name="activity_edit_swimmer_label">Edit User</string>
+    <string name="activity_add_swimmer_label">Add User</string>
+
+    <!-- Toast messages -->
     <string name="swimmer_saved">User Saved</string>
     <string name="swimmer_not_saved">User NOT Saved</string>
     <string name="signed_in_msg">Signed in!</string>
     <string name="signed_in_canceled_msg">Signed in canceled</string>
+    <string name="swimmer_updated">User Updated</string>
+    <string name="swimmer_not_updated">User NOT Updated</string>
+    <string name="discard_changes_dialog_msg">Discard your changes and quit the Editor?</string>
+    <string name="discard_dialog">Discard</string>
+    <string name="keep_editig_dialog">Keep Editing</string>
+    <string name="delete_swimmer_dialog_msg">Delete the swimmer?</string>
+    <string name="delete_dialog">Delete</string>
+    <string name="cancel_dialog">Cancel</string>
 
 </resources>

@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Swimmer circle color for swimmer's with A-E first name letter -->
+    <color name="colorSwimmerA">#F73109</color>
+
+    <!-- Swimmer circle color for swimmer's with F-K first name letter -->
+    <color name="colorSwimmerF">#FFD000</color>
+
+    <!-- Swimmer circle color for swimmer's with L-P first name letter -->
+    <color name="colorSwimmerL">#27E512</color>
+
+    <!-- Swimmer circle color for swimmer's with Q-U first name letter -->
+    <color name="colorSwimmerQ">#1297E5</color>
+
+    <!-- Swimmer circle color for swimmer's with V-Z first name letter -->
+    <color name="colorSwimmerV">#BE12E5</color>
 </resources>

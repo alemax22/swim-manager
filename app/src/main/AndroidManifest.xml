@@ -22,8 +22,7 @@
 
         <activity
             android:name=".SwimmerEditorActivity"
-            android:parentActivityName=".SwimmerActivity"
-            android:label="@string/activity_edit_swimmer_label">
+            android:parentActivityName=".SwimmerActivity">
         </activity>
 
     </application>
