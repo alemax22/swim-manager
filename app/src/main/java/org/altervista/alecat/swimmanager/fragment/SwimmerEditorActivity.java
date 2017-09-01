@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager;
+package org.altervista.alecat.swimmanager.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -31,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.altervista.alecat.swimmanager.R;
+import org.altervista.alecat.swimmanager.data.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
 import java.text.ParsePosition;
@@ -214,7 +216,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // Navigate back to parent activity (SwimmerActivity)
+                // Navigate back to parent activity (SwimManagerActivity)
                 // TODO: Advice the user if he had made changes to the object and let him to choose what to do
                 if (!mSwimmerHasChanged){
                     NavUtils.navigateUpFromSameTask(this);

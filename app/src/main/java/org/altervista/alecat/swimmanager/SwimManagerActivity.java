@@ -1,33 +1,28 @@
 package org.altervista.alecat.swimmanager;
 
 import android.content.Intent;
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 
-import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.altervista.alecat.swimmanager.fragment.SwimmerEditorActivity;
+import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
 import java.util.Arrays;
 
@@ -36,10 +31,10 @@ import java.util.Arrays;
  * Created by Alessandro Cattapan on 18/08/2017.
  */
 
-public class SwimmerActivity extends AppCompatActivity {
+public class SwimManagerActivity extends AppCompatActivity implements SwimmerFragment.OnFragmentInteractionListener {
 
     // TAG for log messages
-    private static final String TAG = SwimmerActivity.class.getSimpleName();
+    private static final String TAG = SwimManagerActivity.class.getSimpleName();
 
     // Constants
     public static final String ANONYMOUS = "anonymous";
@@ -47,59 +42,47 @@ public class SwimmerActivity extends AppCompatActivity {
 
     private String mUsername;
 
-    // Private variables
-    private FirebaseListAdapter mSwimmerAdapter;
-    private ListView mSwimmerListView;
-    private ProgressBar mProgressBar;
-    private View mEmptyListTextView;
+     // The pager widget, which handles animation and allows swiping horizontally to access previous
+     // and next wizard steps.
+    private ViewPager mPager;
 
-    // Firebase variables
-    private FirebaseDatabase mFirebaseDatabase; // Do I keep two different variables??
-    private DatabaseReference mSwimmerInfoDatabaseReference;
+    // The pager adapter, which provides the pages to the view pager widget.
+    private PagerAdapter mPagerAdapter;
+
+    // Firebase Authentication variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swimmer);
+        setContentView(R.layout.activity_swim_manager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mUsername = ANONYMOUS;
 
-        // Initialize Firebase components
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        // Initialize private variables
-        mSwimmerListView = (ListView) findViewById(R.id.swimmer_list_view);
+        // Set the ViewPager
+        mPager = (ViewPager) findViewById(R.id.view_pager);
 
-        // Set onItemClickListener
-        mSwimmerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String reference = mSwimmerAdapter.getRef(i).toString();
-                Log.v(TAG, "Reference: " + reference);
-                Intent intent =  new Intent(SwimmerActivity.this, SwimmerEditorActivity.class);
-                intent.setData(Uri.parse(reference));
-                startActivity(intent);
-            }
-        });
+        // Find the tab layout that shows the tabs
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        // Set the view that has to be shown when the listView is empty
-        mEmptyListTextView = findViewById(R.id.text_empty_swimmer_list);
+        // Connect the tab layout with the view pager. This will
+        //   1. Update the tab layout when the view pager is swiped
+        //   2. Update the view pager when a tab is selected
+        //   3. Set the tab layout's tab names with the view pager's adapter's titles
+        //      by calling onPageTitle()
+        tabLayout.setupWithViewPager(mPager);
 
-        // Progress Bar for data Loading
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
+        // Floating button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =  new Intent(SwimmerActivity.this, SwimmerEditorActivity.class);
+                Intent intent =  new Intent(SwimManagerActivity.this, SwimmerEditorActivity.class);
                 startActivity(intent);
             }
         });
@@ -130,37 +113,32 @@ public class SwimmerActivity extends AppCompatActivity {
         };
     }
 
-
     private void onSignedInInitialize(String username){
         mUsername = username;
 
-        // Useful for progress bar
-        DataSetObserver observer = new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-
-                // Hide the progress bar because data loading is finished
-                mProgressBar.setVisibility(View.GONE);
-
-                // Set the view to show when the ListView is empty
-                mSwimmerListView.setEmptyView(mEmptyListTextView);
-            }
-        };
-
-        // Initialize swimmer ListView and its adapter
-        mSwimmerAdapter = new SwimmerAdapter(this,
-                Swimmer.class,
-                R.layout.item_swimmer_list,
-                mSwimmerInfoDatabaseReference);
-        mSwimmerAdapter.registerDataSetObserver(observer);
-        mSwimmerListView.setAdapter(mSwimmerAdapter);
+        // To load data even after the first log in
+        mPagerAdapter = new SwimManagerPagerAdapter(this, getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
     }
 
     private void onSignedOutCleanup(){
         mUsername = ANONYMOUS;
-        if (mSwimmerAdapter != null){
+
+        // TODO: Clear the adapter
+       /* if (mSwimmerAdapter != null){
             mSwimmerAdapter.cleanup();
+        }*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
 
@@ -216,8 +194,7 @@ public class SwimmerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSwimmerAdapter.cleanup();
+    public void onFragmentInteraction(Uri uri) {
+        // TODO: Implement method
     }
 }

@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- Text color for tabs -->
+    <color name="colorTextTab">#7b88d1</color>
+
     <!-- Swimmer circle color for swimmer's with A-E first name letter -->
     <color name="colorSwimmerA">#F73109</color>
 
