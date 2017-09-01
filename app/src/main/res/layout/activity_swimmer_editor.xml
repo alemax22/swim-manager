@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
+<LinearLayout android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".fragment.SwimmerEditorActivity">
+    tools:context=".fragment.SwimmerEditorActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Overview category -->
     <LinearLayout
@@ -27,19 +27,35 @@
             android:paddingLeft="4dp"
             android:orientation="vertical">
 
-            <!-- Name field -->
-            <EditText
-                android:id="@+id/edit_swimmer_name"
-                android:hint="@string/hint_swimmer_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_name_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
 
-            <!-- Surname field -->
-            <EditText
-                android:id="@+id/edit_swimmer_surname"
-                android:hint="@string/hint_swimmer_surname"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+                    <!-- Name field -->
+                    <EditText
+                        android:id="@+id/edit_swimmer_name"
+                        android:hint="@string/hint_swimmer_name"
+                        android:inputType="textCapWords"
+                        style="@style/EditorFieldStyle" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_surname_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
+
+                <!-- Surname field -->
+                <EditText
+                    android:id="@+id/edit_swimmer_surname"
+                    android:hint="@string/hint_swimmer_surname"
+                    android:inputType="textCapWords"
+                    style="@style/EditorFieldStyle" />
+
+            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -85,16 +101,23 @@
             android:text="@string/category_birthday"
             style="@style/CategoryStyle" />
 
-        <!-- Input fields -->
-        <!-- Birthday field -->
-        <TextView
-            android:layout_height="wrap_content"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_birthday_error"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:id="@+id/text_swimmer_birthday"
-            tools:text="dd/mm/yyyy"
-            style="@style/EditorFieldStyle" />
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
+
+            <!-- Birthday field -->
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingLeft="4dp"
+                android:id="@+id/text_swimmer_birthday"
+                tools:text="dd MMM yyyy"
+                style="@style/EditorFieldStyle" />
+
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <!-- Level category -->

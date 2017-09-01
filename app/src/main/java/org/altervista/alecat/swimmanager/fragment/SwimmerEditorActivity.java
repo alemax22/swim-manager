@@ -5,12 +5,15 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,12 +37,15 @@ import com.google.firebase.database.ValueEventListener;
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.data.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.joda.time.LocalDate;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import static org.altervista.alecat.swimmanager.data.SwimmerContract.DATE_FORMAT;
 
 /**
  * Created by Alessandro Cattapan on 18/08/2017.
@@ -70,6 +76,11 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mSwimmerInfoDatabaseReference;
 
+    // Input Text Error
+    private TextInputLayout mNameError;
+    private TextInputLayout mSurnameError;
+    private TextInputLayout mDateError;
+
     //Check if there are changes in data
     private boolean mSwimmerHasChanged =  false;
     View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -98,6 +109,61 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         mBirthdayTextView.setOnTouchListener(mTouchListener);
         mNameEditText.setOnTouchListener(mTouchListener);
         mSurnameEditText.setOnTouchListener(mTouchListener);
+
+        // Initialize TextInputLayout
+        mNameError = (TextInputLayout) findViewById(R.id.text_input_name_error);
+        mSurnameError = (TextInputLayout) findViewById(R.id.text_input_surname_error);
+        mDateError =(TextInputLayout) findViewById(R.id.text_input_birthday_error);
+
+        // Set Listeners
+        mNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mNameError.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        mSurnameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mSurnameError.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        mBirthdayTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mDateError.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         // Initialize Firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -208,7 +274,6 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 saveSwimmer();
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -253,23 +318,39 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
     // Add/modify swimmer's data
     private void saveSwimmer(){
+
         // Retrieve data from each fields in the Activity
         String name = mNameEditText.getText().toString().trim();
         String surname = mSurnameEditText.getText().toString().trim();
         int gender = mGender;
         int level = mLevel;
         String birthday = mBirthdayTextView.getText().toString().trim();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+
+        // Get today date
+        /*SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         String today = dateFormatter.format(new Date());
 
-        // If there isn't any change inside the Activity simply reurn to the main activity
-        // without doing anything
+        // If there isn't any change inside the Activity simply return
+        // to the main activity without doing anything
         if (mUri == null && TextUtils.isEmpty(name) && TextUtils.isEmpty(surname) && birthday.equals(today)
                 && gender == SwimmerContract.GENDER_UNKNOWN && level == SwimmerContract.LEVEL_UNKNOWN){
+
+            // Return to the previous activity
+            finish();
+        }*/
+
+        // Data validation
+        if (!checkData(name, surname, birthday)){
+            // Stay inside the Editor Activity
             return;
         }
 
-        Swimmer swimmer = new Swimmer(name, surname, birthday, gender,level);
+        // Convert String
+        // TODO: Make this process server side
+        String correctName = capitalizeFirstLetter(name);
+        String correctSurname = capitalizeFirstLetter(surname);
+
+        Swimmer swimmer = new Swimmer(correctName, correctSurname, birthday, gender,level);
         if (mUri != null){
             Task task = mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).updateChildren(swimmer.toMap()); // TODO: Implement DatabaseReference.CompletionListener listener
             if (task != null){
@@ -289,6 +370,45 @@ public class SwimmerEditorActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.swimmer_not_saved, Toast.LENGTH_SHORT).show();
             }
         }
+
+        // Return to the previous activity
+        finish();
+    }
+
+    // Data validation
+    private boolean checkData(String name, String surname, String birthday){
+
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        Date birthdayDate = formatter.parse(birthday, new ParsePosition(0));
+        Date todayDate = new Date();
+        String today = formatter.format(todayDate);
+
+        boolean result = true;
+
+        if (birthdayDate.compareTo(todayDate) >= 0 || today.equals(birthday)){
+            mDateError.setError(getString(R.string.date_error_msg));
+            result = false;
+        }
+
+        if (TextUtils.isEmpty(name)) {
+            mNameError.setError(getString(R.string.name_error_msg));
+            result = false;
+        }
+
+        if (TextUtils.isEmpty(surname)){
+            mSurnameError.setError(getString(R.string.surname_error_msg));
+            result = false;
+        }
+
+        return result;
+    }
+
+    // Capitalize first letter of a String
+    private String capitalizeFirstLetter(String word){
+        String firstLetter = word.substring(0,1).toUpperCase();
+        String remainingWord = word.substring(1).toLowerCase();
+        String result = firstLetter + remainingWord;
+        return result;
     }
 
     // Delete Swimmer
@@ -433,7 +553,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the selected date as the default date in the picker
             TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
             Date date = dateFormatter.parse(birthdayText.getText().toString(), new ParsePosition(0));
             Calendar c = Calendar.getInstance();
             c.setTime(date);
@@ -462,7 +582,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         Date selectedDate = calendar.getTime();
 
         // Set a patter for the date
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         String dateToDisplay = dateFormatter.format(selectedDate);
 
         return dateToDisplay;

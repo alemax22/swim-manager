@@ -14,7 +14,7 @@ import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
 public class SwimManagerPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 2;
     private Context mContext;
 
     public SwimManagerPagerAdapter(Context context, FragmentManager fm) {

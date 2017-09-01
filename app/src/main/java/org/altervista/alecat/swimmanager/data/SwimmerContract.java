@@ -10,6 +10,9 @@ public final class SwimmerContract {
     private SwimmerContract() {
     }
 
+    // Date Format
+    public static final String DATE_FORMAT = "dd MMM yyyy";
+
     // Useful constants inside this app
     // Swimmer's genders
     public static final int GENDER_UNKNOWN = 0;

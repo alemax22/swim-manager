@@ -61,4 +61,9 @@
     <string name="page_swimmer">Swimmers</string>
     <string name="page_courses">Courses</string>
 
+    <!-- Errors -->
+    <string name="name_error_msg">You have to enter a Name</string>
+    <string name="date_error_msg">Invalid Date</string>
+    <string name="surname_error_msg">You have to enter a Surname</string>
+
 </resources>

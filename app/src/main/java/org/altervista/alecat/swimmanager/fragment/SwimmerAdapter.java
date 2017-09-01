@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static org.altervista.alecat.swimmanager.data.SwimmerContract.DATE_FORMAT;
+
 /**
  * Created by Alessandro Cattapan on 30/08/2017.
  * For more information about FirebaseListAdapter visit:
@@ -70,7 +72,7 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
 
     private int calculateAge(String birthdayString){
         // Get a Date object from a string
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         Date birthdayDate = dateFormatter.parse(birthdayString, new ParsePosition(0));
         long timeInMillis = birthdayDate.getTime();
 
@@ -88,7 +90,7 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
     // Check if today is the swimmer's birthday
     private boolean isBirthday (String birthdayString){
         // Get a Date object from a string
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         Date birthdayDate = dateFormatter.parse(birthdayString, new ParsePosition(0));
         Calendar birthday = Calendar.getInstance();
         birthday.setTime(birthdayDate);
