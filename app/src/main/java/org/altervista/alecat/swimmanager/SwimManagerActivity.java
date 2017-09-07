@@ -138,7 +138,7 @@ public class SwimManagerActivity extends AppCompatActivity implements SwimmerFra
             super.onBackPressed();
         } else {
             // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1); //TODO: Change the value, maybe 0
         }
     }
 

@@ -24,7 +24,7 @@ public class SwimManagerPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return new SwimmerFragment();
+        return SwimmerFragment.newInstance("","");
     }
 
     @Override

@@ -1,7 +1,9 @@
 package org.altervista.alecat.swimmanager.fragment;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,17 +16,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.firebase.ui.database.ClassSnapshotParser;
+import com.firebase.ui.database.FirebaseArray;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.SwimManagerActivity;
+import org.altervista.alecat.swimmanager.data.DataLoader;
 import org.altervista.alecat.swimmanager.data.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
+import java.util.List;
+
 
 /**
+ * Created by Alessandro Cattapan on 30/08/2017.
+ *
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link SwimmerFragment.OnFragmentInteractionListener} interface
@@ -32,25 +41,27 @@ import org.altervista.alecat.swimmanager.data.SwimmerContract;
  * Use the {@link SwimmerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwimmerFragment extends Fragment {
+public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCallbacks<List>{
 
     // TAG for log messages
     private static final String TAG = SwimManagerActivity.class.getSimpleName();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
     private String mParam2;
+
+    // Loader id
+    private static final int SWIMMER_LOADER_ID = 1;
 
     private OnFragmentInteractionListener mListener;
 
     // Private variables
     private FirebaseListAdapter mSwimmerAdapter;
     private ListView mSwimmerListView;
+    private FirebaseArray mSwimmerArray;
     private ProgressBar mProgressBar;
     private View mEmptyListTextView;
 
@@ -74,7 +85,6 @@ public class SwimmerFragment extends Fragment {
     public static SwimmerFragment newInstance(String param1, String param2) {
         SwimmerFragment fragment = new SwimmerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -83,14 +93,17 @@ public class SwimmerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
+
+        if (getArguments() != null) {
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+
+        // Create the array list
+        mSwimmerArray = new FirebaseArray(mSwimmerInfoDatabaseReference, new ClassSnapshotParser(Swimmer.class));
     }
 
     @Override
@@ -103,11 +116,10 @@ public class SwimmerFragment extends Fragment {
         // Initialize private variables
         mSwimmerListView = (ListView) rootView.findViewById(R.id.swimmer_list_view);
 
-        // Initialize swimmer ListView and its adapter
+        // Initialize swimmer adapter using an array list, and set the adapter in the listView
         mSwimmerAdapter = new SwimmerAdapter(getContext(),
-                Swimmer.class,
-                R.layout.item_swimmer_list,
-                mSwimmerInfoDatabaseReference);
+                mSwimmerArray,
+                R.layout.item_swimmer_list);
         mSwimmerListView.setAdapter(mSwimmerAdapter);
 
         // Useful for progress bar
@@ -171,6 +183,23 @@ public class SwimmerFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mSwimmerAdapter.cleanup();
+    }
+
+
+    // Loader
+    @Override
+    public Loader<List> onCreateLoader(int i, Bundle bundle) {
+        return new DataLoader(getContext() /*Uri*/); //TODO: URI
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List> loader, List list) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List> loader) {
+
     }
 
     /**

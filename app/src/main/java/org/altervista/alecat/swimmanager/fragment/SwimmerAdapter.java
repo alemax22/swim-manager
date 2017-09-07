@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.ObservableSnapshotArray;
 import com.google.firebase.database.Query;
 
 import org.altervista.alecat.swimmanager.R;
@@ -25,8 +26,6 @@ import static org.altervista.alecat.swimmanager.data.SwimmerContract.DATE_FORMAT
 
 /**
  * Created by Alessandro Cattapan on 30/08/2017.
- * For more information about FirebaseListAdapter visit:
- * https://github.com/firebase/AndroidChat/blob/master/app/src/main/java/com/firebase/androidchat/FirebaseListAdapter.java
  */
 
 public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
@@ -35,6 +34,11 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
 
     public SwimmerAdapter(Context context, Class<Swimmer> modelClass, @LayoutRes int modelLayout, Query query) {
         super(context, modelClass, modelLayout, query);
+        mContext = context;
+    }
+
+    public SwimmerAdapter(Context context, ObservableSnapshotArray snapshots, @LayoutRes int modelLayout){
+        super(context,snapshots,modelLayout);
         mContext = context;
     }
 
