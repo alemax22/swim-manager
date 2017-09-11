@@ -1,21 +1,28 @@
-package org.altervista.alecat.swimmanager.data;
+package org.altervista.alecat.swimmanager.notUsed;
 
-import android.content.AsyncTaskLoader;
+import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.net.Uri;
 
 import com.firebase.ui.database.ClassSnapshotParser;
 import com.firebase.ui.database.FirebaseArray;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.ObservableSnapshotArray;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.List;
+import org.altervista.alecat.swimmanager.R;
+import org.altervista.alecat.swimmanager.data.Swimmer;
+import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.altervista.alecat.swimmanager.fragment.SwimmerAdapter;
 
 /**
  * Created by Alessandro Cattapan on 06/09/2017.
+ *
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  NOT USED  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 
-public class DataLoader extends AsyncTaskLoader<List> {
+public class DataLoader extends AsyncTaskLoader<FirebaseListAdapter> {
 
     private static final String LOG_TAG = DataLoader.class.getName();
 
@@ -40,8 +47,12 @@ public class DataLoader extends AsyncTaskLoader<List> {
     }
 
     @Override
-    public List loadInBackground() {
-        List data = new FirebaseArray(mSwimmerInfoDatabaseReference, new ClassSnapshotParser(Swimmer.class));
-        return data;
+    public FirebaseListAdapter loadInBackground() {
+        ObservableSnapshotArray data = new FirebaseArray(mSwimmerInfoDatabaseReference,
+                new ClassSnapshotParser(Swimmer.class));
+        FirebaseListAdapter adapter = new SwimmerAdapter(getContext(),
+                data,
+                R.layout.item_swimmer_list);
+        return adapter;
     }
 }

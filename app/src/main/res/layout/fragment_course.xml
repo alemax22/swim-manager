@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.altervista.alecat.swimmanager.fragment.SwimmerFragment">
+    tools:context="org.altervista.alecat.swimmanager.fragment.CourseFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,21 +11,21 @@
         tools:showIn="@layout/activity_swim_manager">
 
         <ListView
-            android:id="@+id/swimmer_list_view"
+            android:id="@+id/course_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_swimmer_list"/>
+            tools:listitem="@layout/item_course_list"/>
 
         <TextView
-            android:id="@+id/text_empty_swimmer_list"
+            android:id="@+id/text_empty_course_list"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/empty_swimmer_list_msg"/>
+            android:text="@string/empty_course_list_msg"/>
 
         <ProgressBar
-            android:id="@+id/swimmer_progress_bar"
+            android:id="@+id/course_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"/>

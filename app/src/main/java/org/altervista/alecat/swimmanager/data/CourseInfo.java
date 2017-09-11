@@ -9,6 +9,7 @@ public class CourseInfo {
     // Private variables
     protected String name;
     protected int numLesson;
+    protected int numLessonDone;
     protected int numSwimmers;
     protected String trainer;
 
@@ -19,6 +20,15 @@ public class CourseInfo {
         this.trainer = trainer;
         this.numLesson = numLesson;
         this.numSwimmers = numSwimmers;
+        this.numLessonDone = 0;
+    }
+
+    public CourseInfo(String name, String trainer, int numLesson, int numLessonDone, int numSwimmers) {
+        this.name = name;
+        this.trainer = trainer;
+        this.numLesson = numLesson;
+        this.numSwimmers = numSwimmers;
+        this.numLessonDone = numLessonDone;
     }
 
     public String getName(){
@@ -37,6 +47,10 @@ public class CourseInfo {
         return numSwimmers;
     }
 
+    public int getNumLessonDone() {
+        return numLessonDone;
+    }
+
     public void setName(String name){
         this.name = name;
     }
@@ -51,5 +65,9 @@ public class CourseInfo {
 
     public void setNumSwimmers(int numSwimmers){
         this.numSwimmers = numSwimmers;
+    }
+
+    public void setNumLessonDone(int numLessonDone) {
+        this.numLessonDone = numLessonDone;
     }
 }

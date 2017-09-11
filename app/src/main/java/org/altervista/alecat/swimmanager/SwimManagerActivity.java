@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
+import org.altervista.alecat.swimmanager.fragment.CourseFragment;
 import org.altervista.alecat.swimmanager.fragment.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
@@ -31,7 +32,8 @@ import java.util.Arrays;
  * Created by Alessandro Cattapan on 18/08/2017.
  */
 
-public class SwimManagerActivity extends AppCompatActivity implements SwimmerFragment.OnFragmentInteractionListener {
+public class SwimManagerActivity extends AppCompatActivity implements SwimmerFragment.OnFragmentInteractionListener,
+        CourseFragment.OnFragmentInteractionListener {
 
     // TAG for log messages
     private static final String TAG = SwimManagerActivity.class.getSimpleName();

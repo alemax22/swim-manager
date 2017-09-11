@@ -18,6 +18,11 @@ public class CourseDay {
         this.done = done;
     }
 
+    public CourseDay(String day){
+        this.day = day;
+        this.done = false;
+    }
+
     public String getDay(){
         return day;
     }

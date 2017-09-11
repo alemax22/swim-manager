@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import org.altervista.alecat.swimmanager.fragment.CourseFragment;
 import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
 /**
@@ -14,6 +15,7 @@ import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
 public class SwimManagerPagerAdapter extends FragmentStatePagerAdapter {
 
+    private static final String TAG = SwimManagerPagerAdapter.class.getSimpleName();
     private static final int NUM_PAGES = 2;
     private Context mContext;
 
@@ -24,7 +26,15 @@ public class SwimManagerPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return SwimmerFragment.newInstance("","");
+        switch (position){
+            case 0:
+                return SwimmerFragment.newInstance("","");
+            case 1:
+                return CourseFragment.newInstance("","");
+            default:
+                Log.v(TAG,"Invalid page position: " + position);
+                return null;
+        }
     }
 
     @Override

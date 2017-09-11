@@ -1,10 +1,8 @@
 package org.altervista.alecat.swimmanager.fragment;
 
-import android.app.LoaderManager;
+import android.database.DataSetObserver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,19 +14,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.firebase.ui.database.ClassSnapshotParser;
-import com.firebase.ui.database.FirebaseArray;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.SwimManagerActivity;
-import org.altervista.alecat.swimmanager.data.DataLoader;
 import org.altervista.alecat.swimmanager.data.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
-import java.util.List;
 
 
 /**
@@ -41,10 +35,14 @@ import java.util.List;
  * Use the {@link SwimmerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCallbacks<List>{
+
+public class SwimmerFragment extends Fragment{
 
     // TAG for log messages
     private static final String TAG = SwimManagerActivity.class.getSimpleName();
+
+    // Loader id
+    private static final int SWIMMER_LOADER_ID = 1;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,21 +51,24 @@ public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCal
     // TODO: Rename and change types of parameters
     private String mParam2;
 
-    // Loader id
-    private static final int SWIMMER_LOADER_ID = 1;
-
     private OnFragmentInteractionListener mListener;
 
     // Private variables
     private FirebaseListAdapter mSwimmerAdapter;
     private ListView mSwimmerListView;
-    private FirebaseArray mSwimmerArray;
     private ProgressBar mProgressBar;
     private View mEmptyListTextView;
 
     // Firebase variables
-    private FirebaseDatabase mFirebaseDatabase; // Do I keep two different variables??
+    private /*static*/ FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mSwimmerInfoDatabaseReference;
+
+   /* static {
+
+        // Initialize Firebase components
+        mFirebaseDatabase =  FirebaseDatabase.getInstance();
+        mFirebaseDatabase.setPersistenceEnabled(true);
+    }*/
 
     public SwimmerFragment() {
         // Required empty public constructor
@@ -94,16 +95,12 @@ public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Firebase components
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
-
         if (getArguments() != null) {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // Create the array list
-        mSwimmerArray = new FirebaseArray(mSwimmerInfoDatabaseReference, new ClassSnapshotParser(Swimmer.class));
+        mFirebaseDatabase =  FirebaseDatabase.getInstance();
+        mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
     }
 
     @Override
@@ -113,13 +110,18 @@ public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCal
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_swimmer, container, false);
 
+        // Progress Bar for data Loading
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.swimmer_progress_bar);
+        mProgressBar.setVisibility(View.VISIBLE);
+
         // Initialize private variables
         mSwimmerListView = (ListView) rootView.findViewById(R.id.swimmer_list_view);
 
         // Initialize swimmer adapter using an array list, and set the adapter in the listView
         mSwimmerAdapter = new SwimmerAdapter(getContext(),
-                mSwimmerArray,
-                R.layout.item_swimmer_list);
+                Swimmer.class,
+                R.layout.item_swimmer_list,
+                mSwimmerInfoDatabaseReference.orderByChild("name")); //TODO: Order of Values
         mSwimmerListView.setAdapter(mSwimmerAdapter);
 
         // Useful for progress bar
@@ -153,10 +155,6 @@ public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCal
         // Set the view that has to be shown when the listView is empty
         mEmptyListTextView = rootView.findViewById(R.id.text_empty_swimmer_list);
 
-        // Progress Bar for data Loading
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
         return rootView;
     }
 
@@ -185,33 +183,6 @@ public class SwimmerFragment extends Fragment implements LoaderManager.LoaderCal
         mSwimmerAdapter.cleanup();
     }
 
-
-    // Loader
-    @Override
-    public Loader<List> onCreateLoader(int i, Bundle bundle) {
-        return new DataLoader(getContext() /*Uri*/); //TODO: URI
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List> loader, List list) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List> loader) {
-
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

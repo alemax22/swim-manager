@@ -66,4 +66,12 @@
     <string name="date_error_msg">Invalid Date</string>
     <string name="surname_error_msg">You have to enter a Surname</string>
 
+    <!-- Empty swimmer list view -->
+    <string name="empty_course_list_msg">There aren\'t courses yet</string>
+
+    <!-- Course Adapter -->
+    <string name="course_text_trainer">Trainer</string>
+    <string name="text_course_lesson">Lessons</string>
+    <string name="text_course_swimmer">Swimmer</string>
+
 </resources>
