@@ -62,15 +62,8 @@ public class SwimmerFragment extends Fragment{
     private View mEmptyListTextView;
 
     // Firebase variables
-    private /*static*/ FirebaseDatabase mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mSwimmerInfoDatabaseReference;
-
-   /* static {
-
-        // Initialize Firebase components
-        mFirebaseDatabase =  FirebaseDatabase.getInstance();
-        mFirebaseDatabase.setPersistenceEnabled(true);
-    }*/
 
     public SwimmerFragment() {
         // Required empty public constructor

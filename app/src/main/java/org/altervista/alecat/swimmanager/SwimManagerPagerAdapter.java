@@ -16,41 +16,31 @@ import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 public class SwimManagerPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = SwimManagerPagerAdapter.class.getSimpleName();
-    private static final int NUM_PAGES = 2;
+    private Fragment[] mFragments;
+    private String[] mFragmentsTitle;
     private Context mContext;
 
     public SwimManagerPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
+        mFragments = new Fragment[] {SwimmerFragment.newInstance("",""),
+                CourseFragment.newInstance("","")};
+        mFragmentsTitle = new String[] {mContext.getString(R.string.page_swimmer),
+                mContext.getString(R.string.page_courses)};
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
-            case 0:
-                return SwimmerFragment.newInstance("","");
-            case 1:
-                return CourseFragment.newInstance("","");
-            default:
-                Log.v(TAG,"Invalid page position: " + position);
-                return null;
-        }
+        return mFragments[position];
     }
 
     @Override
     public int getCount() {
-        return NUM_PAGES;
+        return mFragments.length;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0:
-                return mContext.getString(R.string.page_swimmer);
-            case 1:
-                return mContext.getString(R.string.page_courses);
-            default:
-                return "NO NAME"; // Error
-        }
+        return mFragmentsTitle[position];
     }
 }
