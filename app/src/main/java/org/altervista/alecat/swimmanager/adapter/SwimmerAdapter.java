@@ -72,6 +72,10 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
         if (isBirthday(swimmer.getBirthday())){
             view.findViewById(R.id.birthday_image).setVisibility(View.VISIBLE);
         }
+        else
+        {
+            view.findViewById(R.id.birthday_image).setVisibility(View.GONE);
+        }
     }
 
     private int calculateAge(String birthdayString){
