@@ -20,7 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.SwimManagerActivity;
-import org.altervista.alecat.swimmanager.data.Swimmer;
+import org.altervista.alecat.swimmanager.adapter.SwimmerAdapter;
+import org.altervista.alecat.swimmanager.editor.activity.SwimmerEditorActivity;
+import org.altervista.alecat.swimmanager.models.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
 
@@ -101,6 +103,9 @@ public class SwimmerFragment extends Fragment{
 
         mFirebaseDatabase =  FirebaseDatabase.getInstance();
         mSwimmerInfoDatabaseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
+
+        // Keep data inside cache
+        mSwimmerInfoDatabaseReference.keepSynced(true);
     }
 
     @Override

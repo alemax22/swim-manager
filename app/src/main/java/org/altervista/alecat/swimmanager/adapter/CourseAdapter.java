@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.fragment;
+package org.altervista.alecat.swimmanager.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -9,8 +9,7 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.Query;
 
 import org.altervista.alecat.swimmanager.R;
-import org.altervista.alecat.swimmanager.data.Course;
-import org.altervista.alecat.swimmanager.data.Swimmer;
+import org.altervista.alecat.swimmanager.models.Course;
 
 /**
  * Created by Alessandro Cattapan on 10/09/2017.

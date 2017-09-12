@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.data;
+package org.altervista.alecat.swimmanager.models;
 
 /**
  * Created by Alessandro Cattapan on 01/09/2017.

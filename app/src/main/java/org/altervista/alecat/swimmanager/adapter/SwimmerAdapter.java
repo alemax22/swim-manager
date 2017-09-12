@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.fragment;
+package org.altervista.alecat.swimmanager.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -12,7 +12,7 @@ import com.firebase.ui.database.ObservableSnapshotArray;
 import com.google.firebase.database.Query;
 
 import org.altervista.alecat.swimmanager.R;
-import org.altervista.alecat.swimmanager.data.Swimmer;
+import org.altervista.alecat.swimmanager.models.Swimmer;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;

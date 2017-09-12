@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.data;
+package org.altervista.alecat.swimmanager.models;
 
 import java.util.HashMap;
 import java.util.Map;

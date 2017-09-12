@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.fragment;
+package org.altervista.alecat.swimmanager.editor.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -35,9 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.altervista.alecat.swimmanager.R;
-import org.altervista.alecat.swimmanager.data.Swimmer;
+import org.altervista.alecat.swimmanager.models.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
-import org.joda.time.LocalDate;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

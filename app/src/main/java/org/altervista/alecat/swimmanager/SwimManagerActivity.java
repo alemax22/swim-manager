@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 import org.altervista.alecat.swimmanager.fragment.CourseFragment;
-import org.altervista.alecat.swimmanager.fragment.SwimmerEditorActivity;
+import org.altervista.alecat.swimmanager.editor.activity.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
 import java.util.Arrays;

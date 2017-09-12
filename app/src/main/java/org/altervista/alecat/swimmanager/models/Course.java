@@ -1,11 +1,10 @@
-package org.altervista.alecat.swimmanager.data;
+package org.altervista.alecat.swimmanager.models;
 
 import com.firebase.ui.database.FirebaseArray;
 import com.firebase.ui.database.ObservableSnapshotArray;
 import com.google.firebase.database.DatabaseReference;
 
-import java.util.ArrayList;
-import java.util.Observable;
+import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
 /**
  * Created by Alessandro Cattapan on 01/09/2017.

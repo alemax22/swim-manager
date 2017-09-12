@@ -38,7 +38,6 @@ public final class SwimmerContract {
 
     // Firebase other useful nodes' name
     public static final String NODE_DATE = "dates";
-    public static final String NODE_INFO = "info";
     public static final String NODE_SWIMMER = "swimmers";
     public static final String NODE_SEASON = "season-";
 
