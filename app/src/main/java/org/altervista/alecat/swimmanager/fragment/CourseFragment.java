@@ -7,12 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.R;
+import org.altervista.alecat.swimmanager.adapter.CourseAdapter;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.altervista.alecat.swimmanager.models.Course;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,9 +31,14 @@ public class CourseFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private FirebaseListAdapter mCourseAdapter;
+    private ListView mCourseListView;
+    private ProgressBar mProgressBar;
+    private View mEmptyCourseView;
+
     // Firebase variables
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference coursesActiveReference;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mCoursesActiveReference;
 
     public CourseFragment() {
         // Required empty public constructor
@@ -43,16 +53,29 @@ public class CourseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        coursesActiveReference = firebaseDatabase.getReference().child(SwimmerContract.NODE_COURSE_ACTIVE);
+        // Initialize Firebase components
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mCoursesActiveReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_COURSE_ACTIVE);
+        // Keep data from Firebase database inside cache
+        mCoursesActiveReference.keepSynced(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_course, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_course, container, false);
 
+        mCourseListView = (ListView) rootView.findViewById(R.id.course_list_view);
+        mEmptyCourseView = rootView.findViewById(R.id.text_empty_course_list);
+
+        mCourseAdapter = new CourseAdapter(getContext(),
+                Course.class,
+                R.layout.item_course_list,
+                mCoursesActiveReference);
+        mCourseListView.setAdapter(mCourseAdapter);
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
