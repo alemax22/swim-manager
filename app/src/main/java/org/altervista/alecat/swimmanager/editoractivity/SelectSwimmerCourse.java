@@ -33,7 +33,7 @@ public class SelectSwimmerCourse extends AppCompatActivity {
 
         // Set Title and subtitle of the activity
         setTitle(R.string.label_select_swimmer_course);
-        getActionBar().setSubtitle(R.string.action_bar_subtitle_select_swimmer);
+        // getActionBar().setSubtitle(R.string.action_bar_subtitle_select_swimmer);
 
         // Initialize Firebase variables
         mFirebaseDatabase = FirebaseDatabase.getInstance();
