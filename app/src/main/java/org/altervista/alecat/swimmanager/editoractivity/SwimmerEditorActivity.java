@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.editor.activity;
+package org.altervista.alecat.swimmanager.editoractivity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -35,8 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.altervista.alecat.swimmanager.R;
-import org.altervista.alecat.swimmanager.models.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.altervista.alecat.swimmanager.models.Swimmer;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -54,7 +54,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
     // TAG for log messages
     private static final String TAG = SwimmerEditorActivity.class.getSimpleName();
-    private Uri mUri;
+    private String mReference;
 
     // Gender Spinner
     private Spinner mGenderSpinner;
@@ -183,10 +183,10 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
         // Change the label of the activity
         Intent intent = getIntent();
-        mUri = intent.getData();
+        mReference = intent.getStringExtra(SwimmerContract.REFERENCE);
 
         // Change Activity label
-        if (mUri != null) {
+        if (mReference != null) {
             setTitle(R.string.activity_edit_swimmer_label);
             loadSwimmer();
         } else {
@@ -197,7 +197,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     }
 
     private void loadSwimmer(){
-        mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mSwimmerInfoDatabaseReference.child(mReference).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Updates fields
@@ -258,7 +258,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         super.onPrepareOptionsMenu(menu);
 
         // Set invisible "delete action" when the user is adding a new swimmer
-        if(mUri == null){
+        if(mReference == null){
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
         }
@@ -350,8 +350,8 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         String correctSurname = capitalizeFirstLetter(surname);
 
         Swimmer swimmer = new Swimmer(correctName, correctSurname, birthday, gender,level);
-        if (mUri != null){
-            Task task = mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).updateChildren(swimmer.toMap()); // TODO: Implement DatabaseReference.CompletionListener listener
+        if (mReference != null){
+            Task task = mSwimmerInfoDatabaseReference.child(mReference).updateChildren(swimmer.toMap()); // TODO: Implement DatabaseReference.CompletionListener listener
             if (task != null){
                 // The swimmer is successfully updated
                 Toast.makeText(getApplicationContext(), R.string.swimmer_updated, Toast.LENGTH_SHORT).show();
@@ -412,7 +412,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
 
     // Delete Swimmer
     private void deleteSwimmer(){
-        mSwimmerInfoDatabaseReference.child(mUri.getLastPathSegment()).removeValue();
+        mSwimmerInfoDatabaseReference.child(mReference).removeValue();
     }
 
     // Show delete confirmation Dialog

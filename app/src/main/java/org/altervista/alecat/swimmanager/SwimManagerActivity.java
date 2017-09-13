@@ -21,8 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
+import org.altervista.alecat.swimmanager.editoractivity.CourseEditorActivity;
 import org.altervista.alecat.swimmanager.fragment.CourseFragment;
-import org.altervista.alecat.swimmanager.editor.activity.SwimmerEditorActivity;
+import org.altervista.alecat.swimmanager.editoractivity.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
 
 import java.util.Arrays;
@@ -84,8 +85,18 @@ public class SwimManagerActivity extends AppCompatActivity implements SwimmerFra
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =  new Intent(SwimManagerActivity.this, SwimmerEditorActivity.class);
-                startActivity(intent);
+                Intent intent;
+                switch (mPager.getCurrentItem()){
+                    case 0:
+                        intent =  new Intent(SwimManagerActivity.this, SwimmerEditorActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        intent = new Intent(SwimManagerActivity.this, CourseEditorActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+
             }
         });
 

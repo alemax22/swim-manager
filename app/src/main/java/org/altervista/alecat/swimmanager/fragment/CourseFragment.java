@@ -1,12 +1,16 @@
 package org.altervista.alecat.swimmanager.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -17,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.adapter.CourseAdapter;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.altervista.alecat.swimmanager.editoractivity.CourseEditorActivity;
 import org.altervista.alecat.swimmanager.models.Course;
 
 /**
@@ -28,6 +33,8 @@ import org.altervista.alecat.swimmanager.models.Course;
  * create an instance of this fragment.
  */
 public class CourseFragment extends Fragment {
+
+    private static final String TAG = CourseFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
@@ -68,12 +75,44 @@ public class CourseFragment extends Fragment {
 
         mCourseListView = (ListView) rootView.findViewById(R.id.course_list_view);
         mEmptyCourseView = rootView.findViewById(R.id.text_empty_course_list);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.course_progress_bar);
 
         mCourseAdapter = new CourseAdapter(getContext(),
                 Course.class,
                 R.layout.item_course_list,
                 mCoursesActiveReference);
         mCourseListView.setAdapter(mCourseAdapter);
+
+        // Useful for progress bar
+        DataSetObserver observer = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+                // Hide the progress bar because data loading is finished
+                mProgressBar.setVisibility(View.GONE);
+
+                // Set the view to show when the ListView is empty
+                mCourseListView.setEmptyView(mEmptyCourseView);
+            }
+        };
+
+        mCourseAdapter.registerDataSetObserver(observer);
+
+        // Set onItemClickListener
+        mCourseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String reference = mCourseAdapter.getRef(i).toString();
+                Log.v(TAG, "Reference: " + reference);
+                Intent intent =  new Intent(getActivity(), CourseEditorActivity.class);
+                intent.putExtra(SwimmerContract.REFERENCE, reference);
+                startActivity(intent);
+            }
+        });
+
+        // Set the view that has to be shown when the listView is empty
+        mEmptyCourseView = rootView.findViewById(R.id.text_empty_swimmer_list);
 
         return rootView;
     }

@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.SwimManagerActivity;
 import org.altervista.alecat.swimmanager.adapter.SwimmerAdapter;
-import org.altervista.alecat.swimmanager.editor.activity.SwimmerEditorActivity;
+import org.altervista.alecat.swimmanager.editoractivity.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.models.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 
@@ -145,7 +145,7 @@ public class SwimmerFragment extends Fragment{
                 String reference = mSwimmerAdapter.getRef(i).toString();
                 Log.v(TAG, "Reference: " + reference);
                 Intent intent =  new Intent(getActivity(), SwimmerEditorActivity.class);
-                intent.setData(Uri.parse(reference));
+                intent.putExtra(SwimmerContract.REFERENCE, reference);
                 startActivity(intent);
             }
         });

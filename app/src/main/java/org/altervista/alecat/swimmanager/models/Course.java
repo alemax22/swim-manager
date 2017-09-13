@@ -15,19 +15,19 @@ public class Course {
 
     public Course(){}
 
-    public Course(String name, String trainer, int numLesson, int numSwimmers) {
+    public Course(String name, String trainer, int numLesson, int numSwimmer) {
         this.name = name;
         this.trainer = trainer;
         this.numLesson = numLesson;
-        this.numSwimmer = numSwimmers;
+        this.numSwimmer = numSwimmer;
         this.numLessonDone = 0;
     }
 
-    public Course(String name, String trainer, int numLesson, int numLessonDone, int numSwimmers) {
+    public Course(String name, String trainer, int numLesson, int numLessonDone, int numSwimmer) {
         this.name = name;
         this.trainer = trainer;
         this.numLesson = numLesson;
-        this.numSwimmer = numSwimmers;
+        this.numSwimmer = numSwimmer;
         this.numLessonDone = numLessonDone;
     }
 
@@ -43,7 +43,7 @@ public class Course {
         return numLesson;
     }
 
-    public int getNumSwimmers(){
+    public int getNumSwimmer(){
         return numSwimmer;
     }
 
@@ -63,7 +63,7 @@ public class Course {
         this.numLesson = numLesson;
     }
 
-    public void setNumSwimmers(int numSwimmers){
+    public void setNumSwimmer(int numSwimmers){
         this.numSwimmer = numSwimmers;
     }
 

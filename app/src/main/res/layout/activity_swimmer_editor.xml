@@ -4,148 +4,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".editor.activity.SwimmerEditorActivity"
+    tools:context=".editoractivity.SwimmerEditorActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Overview category -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
-
-        <!-- Input fields -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_name_error"
+            <LinearLayout
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorEnabled="true">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                    <!-- Name field -->
-                    <EditText
-                        android:id="@+id/edit_swimmer_name"
-                        android:hint="@string/hint_swimmer_name"
-                        android:inputType="textCapWords"
-                        style="@style/EditorFieldStyle" />
+                <!-- Overview category -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            </android.support.design.widget.TextInputLayout>
+                    <!-- Label -->
+                    <TextView
+                        android:text="@string/category_overview"
+                        style="@style/CategoryStyle" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_surname_error"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:errorEnabled="true">
+                    <!-- Input fields -->
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:paddingLeft="4dp"
+                        android:orientation="vertical">
 
-                <!-- Surname field -->
-                <EditText
-                    android:id="@+id/edit_swimmer_surname"
-                    android:hint="@string/hint_swimmer_surname"
-                    android:inputType="textCapWords"
-                    style="@style/EditorFieldStyle" />
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/text_input_name_error"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorEnabled="true">
 
-            </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
-    </LinearLayout>
+                            <!-- Name field -->
+                            <EditText
+                                android:id="@+id/edit_swimmer_name"
+                                android:hint="@string/hint_swimmer_name"
+                                android:inputType="textCapWords"
+                                style="@style/EditorFieldStyle" />
 
-    <!-- Gender category -->
-    <LinearLayout
-        android:id="@+id/container_gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                        </android.support.design.widget.TextInputLayout>
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_gender"
-            style="@style/CategoryStyle" />
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/text_input_surname_error"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorEnabled="true">
 
-        <!-- Input field -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
+                            <!-- Surname field -->
+                            <EditText
+                                android:id="@+id/edit_swimmer_surname"
+                                android:hint="@string/hint_swimmer_surname"
+                                android:inputType="textCapWords"
+                                style="@style/EditorFieldStyle" />
 
-            <!-- Gender drop-down spinner -->
-            <Spinner
-                android:id="@+id/spinner_gender"
-                android:layout_height="48dp"
-                android:layout_width="wrap_content"
-                android:paddingRight="16dp"
-                android:spinnerMode="dropdown"/>
-        </LinearLayout>
-    </LinearLayout>
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
 
-    <!-- Birthday category -->
-    <LinearLayout
-        android:id="@+id/container_measurement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp">
+                <!-- Gender category -->
+                <LinearLayout
+                    android:id="@+id/container_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_birthday"
-            style="@style/CategoryStyle" />
+                    <!-- Label -->
+                    <TextView
+                        android:text="@string/category_gender"
+                        style="@style/CategoryStyle" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/text_input_birthday_error"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true">
+                    <!-- Input field -->
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-            <!-- Birthday field -->
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingLeft="4dp"
-                android:id="@+id/text_swimmer_birthday"
-                tools:text="dd MMM yyyy"
-                style="@style/EditorFieldStyle" />
+                        <!-- Gender drop-down spinner -->
+                        <Spinner
+                            android:id="@+id/spinner_gender"
+                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:paddingRight="16dp"
+                            android:spinnerMode="dropdown"/>
+                    </LinearLayout>
+                </LinearLayout>
 
-        </android.support.design.widget.TextInputLayout>
-    </LinearLayout>
+                <!-- Birthday category -->
+                <LinearLayout
+                    android:id="@+id/container_measurement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="16dp">
 
-    <!-- Level category -->
-    <LinearLayout
-        android:id="@+id/container_level"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                    <!-- Label -->
+                    <TextView
+                        android:text="@string/category_birthday"
+                        style="@style/CategoryStyle" />
 
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_level"
-            style="@style/CategoryStyle" />
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/text_input_birthday_error"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
 
-        <!-- Input field -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
+                        <!-- Birthday field -->
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:paddingLeft="4dp"
+                            android:id="@+id/text_swimmer_birthday"
+                            tools:text="dd MMM yyyy"
+                            style="@style/EditorFieldStyle" />
 
-            <!-- Gender drop-down spinner -->
-            <Spinner
-                android:id="@+id/spinner_level"
-                android:layout_height="48dp"
-                android:layout_width="wrap_content"
-                android:paddingRight="16dp"
-                android:spinnerMode="dropdown"/>
-        </LinearLayout>
-    </LinearLayout>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Level category -->
+                <LinearLayout
+                    android:id="@+id/container_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Label -->
+                    <TextView
+                        android:text="@string/category_level"
+                        style="@style/CategoryStyle" />
+
+                    <!-- Input field -->
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <!-- Gender drop-down spinner -->
+                        <Spinner
+                            android:id="@+id/spinner_level"
+                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:paddingRight="16dp"
+                            android:spinnerMode="dropdown"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+    </ScrollView>
 </LinearLayout>
