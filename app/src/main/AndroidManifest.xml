@@ -21,8 +21,11 @@
         </activity>
         <activity
             android:name=".editoractivity.SwimmerEditorActivity"
-            android:parentActivityName=".SwimManagerActivity"></activity>
-        <activity android:name=".editoractivity.CourseEditorActivity"></activity>
+            android:parentActivityName=".SwimManagerActivity" />
+        <activity
+            android:name=".editoractivity.CourseEditorActivity" />
+        <activity
+            android:name=".editoractivity.SelectSwimmerCourse"/>
     </application>
 
 </manifest>

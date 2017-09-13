@@ -43,9 +43,6 @@ public class SwimmerFragment extends Fragment{
     // TAG for log messages
     private static final String TAG = SwimManagerActivity.class.getSimpleName();
 
-    // Loader id
-    private static final int SWIMMER_LOADER_ID = 1;
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM2 = "param2";

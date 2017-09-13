@@ -81,5 +81,7 @@
     <string name="hint_trainer">Trainer</string>
     <string name="text_number_of_swimmers">Number of Swimmers</string>
     <string name="button_select_swimmers">Select Swimmers</string>
+    <string name="label_select_swimmer_course">New Course</string>
+    <string name="action_bar_subtitle_select_swimmer">Select swimmers</string>
 
 </resources>

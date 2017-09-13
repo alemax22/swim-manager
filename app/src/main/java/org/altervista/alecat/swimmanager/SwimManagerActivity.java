@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 import org.altervista.alecat.swimmanager.editoractivity.CourseEditorActivity;
+import org.altervista.alecat.swimmanager.editoractivity.SelectSwimmerCourse;
 import org.altervista.alecat.swimmanager.fragment.CourseFragment;
 import org.altervista.alecat.swimmanager.editoractivity.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
@@ -92,7 +93,7 @@ public class SwimManagerActivity extends AppCompatActivity implements SwimmerFra
                         startActivity(intent);
                         break;
                     case 1:
-                        intent = new Intent(SwimManagerActivity.this, CourseEditorActivity.class);
+                        intent = new Intent(SwimManagerActivity.this, SelectSwimmerCourse.class);
                         startActivity(intent);
                         break;
                 }

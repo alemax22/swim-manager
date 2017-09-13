@@ -21,4 +21,8 @@
 
     <!-- Swimmer circle color for swimmer's with V-Z first name letter -->
     <color name="colorSwimmerV">#BE12E5</color>
+
+    <!-- Selected swimmer circle color -->
+    <color name="colorSelectedSwimmer">#41DB3B</color>
+
 </resources>
