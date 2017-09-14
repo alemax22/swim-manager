@@ -1,8 +1,16 @@
 package org.altervista.alecat.swimmanager.editoractivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -11,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.R;
+import org.altervista.alecat.swimmanager.SwimManagerActivity;
 import org.altervista.alecat.swimmanager.adapter.SwimmerAdapter;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 import org.altervista.alecat.swimmanager.models.Swimmer;
@@ -18,6 +27,8 @@ import org.altervista.alecat.swimmanager.models.Swimmer;
 import java.util.ArrayList;
 
 public class SelectSwimmerCourse extends AppCompatActivity {
+
+    private final static String TAG = SelectSwimmerCourse.class.getSimpleName();
 
     // Private variables
     private ListView mSwimmerList;
@@ -47,20 +58,35 @@ public class SelectSwimmerCourse extends AppCompatActivity {
                 Swimmer.class,
                 R.layout.item_swimmer_list,
                 mSwimmerReference);
+        mSwimmerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         mSwimmerList.setAdapter(mSwimmerAdapter);
+
         mSwimmerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String reference = mSwimmerAdapter.getRef(i).toString();
-                View check = view.findViewById(R.id.selected_swimmer_check);
-                if (mSelectedSwimmer.contains(reference)){
+                if (mSwimmerList.isItemChecked(i)){
                     mSelectedSwimmer.remove(reference);
-                    check.setVisibility(View.GONE);
+                    mSwimmerList.setItemChecked(i, false);
+                    Log.v(TAG, "Deselected: " + reference);
                 } else {
                     mSelectedSwimmer.add(reference);
-                    check.setVisibility(View.VISIBLE);
+                    mSwimmerList.setItemChecked(i, true);
+                    Log.v(TAG, "Selected: " + reference);
                 }
             }
         });
+
+        // Floating button
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_select_swimmer);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SelectSwimmerCourse.this, CourseEditorActivity.class);
+                intent.putExtra(SwimmerContract.ARRAY_LIST, mSelectedSwimmer);
+                startActivity(intent);
+            }
+        });
     }
+
 }

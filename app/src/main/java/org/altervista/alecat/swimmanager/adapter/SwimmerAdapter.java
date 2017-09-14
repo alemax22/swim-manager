@@ -44,6 +44,12 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
 
     @Override
     protected void populateView(View view, Swimmer swimmer, int position) {
+        // Reset View state
+        View birthdayView = view.findViewById(R.id.birthday_image);
+        birthdayView.setVisibility(View.GONE);
+        View checkView = view.findViewById(R.id.selected_swimmer_check);
+        checkView.setVisibility(View.GONE);
+
         // Set the swimmer's Name and Surname string inside the texView
         String nameSurname = swimmer.getName() + " " + swimmer.getSurname();
         ((TextView) view.findViewById(R.id.text_swimmer_name_surname)).setText(nameSurname);
@@ -70,11 +76,7 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
 
         // If it is the swimmer's birthday show the icon
         if (isBirthday(swimmer.getBirthday())){
-            view.findViewById(R.id.birthday_image).setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            view.findViewById(R.id.birthday_image).setVisibility(View.GONE);
+            birthdayView.setVisibility(View.VISIBLE);
         }
     }
 

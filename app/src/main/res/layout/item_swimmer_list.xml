@@ -26,7 +26,6 @@
 
         <TextView
             android:id="@+id/selected_swimmer_check"
-            android:visibility="invisible"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_alignRight="@+id/initial_letter"
@@ -72,7 +71,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:visibility="invisible"
         android:src="@drawable/ic_birthday"
         android:layout_gravity="center_vertical"
         />
