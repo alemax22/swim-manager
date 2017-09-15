@@ -47,8 +47,8 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
         // Reset View state
         View birthdayView = view.findViewById(R.id.birthday_image);
         birthdayView.setVisibility(View.GONE);
-        View checkView = view.findViewById(R.id.selected_swimmer_check);
-        checkView.setVisibility(View.GONE);
+        // View checkView = view.findViewById(R.id.selected_swimmer_check);
+        // checkView.setVisibility(View.GONE);
 
         // Set the swimmer's Name and Surname string inside the texView
         String nameSurname = swimmer.getName() + " " + swimmer.getSurname();

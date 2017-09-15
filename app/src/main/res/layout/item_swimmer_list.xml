@@ -24,13 +24,6 @@
             tools:text="ns"
             android:layout_marginRight="16dp"/>
 
-        <TextView
-            android:id="@+id/selected_swimmer_check"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignRight="@+id/initial_letter"
-            android:layout_alignBottom="@+id/initial_letter"
-            android:background="@drawable/selected_circle" />
 
     </RelativeLayout>
 

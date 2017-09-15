@@ -139,9 +139,9 @@ public class SwimmerFragment extends Fragment{
         mSwimmerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String reference = mSwimmerAdapter.getRef(i).toString();
+                String reference = mSwimmerAdapter.getRef(i).getKey().toString();
                 Log.v(TAG, "Reference: " + reference);
-                Intent intent =  new Intent(getActivity(), SwimmerEditorActivity.class);
+                Intent intent =  new Intent(getContext(), SwimmerEditorActivity.class);
                 intent.putExtra(SwimmerContract.REFERENCE, reference);
                 startActivity(intent);
             }
