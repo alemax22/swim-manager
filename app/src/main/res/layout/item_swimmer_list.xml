@@ -6,24 +6,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/initial_letter"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/swimmer_circle"
-            android:fontFamily="sans-serif-medium"
-            android:textAllCaps="true"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            tools:text="ns"
-            android:layout_marginRight="16dp"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp">
 
+            <TextView
+                android:id="@+id/initial_letter"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/swimmer_circle"
+                android:fontFamily="sans-serif-medium"
+                android:textAllCaps="true"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                tools:text="ns" />
+
+            <TextView
+                android:id="@+id/selected_swimmer_circle"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/swimmer_selected_circle"
+                android:layout_alignBottom="@id/initial_letter"
+                android:layout_alignRight="@id/initial_letter"
+                />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

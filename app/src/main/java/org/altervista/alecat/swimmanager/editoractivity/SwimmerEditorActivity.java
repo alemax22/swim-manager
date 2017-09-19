@@ -325,19 +325,6 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         int level = mLevel;
         String birthday = mBirthdayTextView.getText().toString().trim();
 
-        // Get today date
-        /*SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        String today = dateFormatter.format(new Date());
-
-        // If there isn't any change inside the Activity simply return
-        // to the main activity without doing anything
-        if (mUri == null && TextUtils.isEmpty(name) && TextUtils.isEmpty(surname) && birthday.equals(today)
-                && gender == SwimmerContract.GENDER_UNKNOWN && level == SwimmerContract.LEVEL_UNKNOWN){
-
-            // Return to the previous activity
-            finish();
-        }*/
-
         // Data validation
         if (!checkData(name, surname, birthday)){
             // Stay inside the Editor Activity
@@ -360,7 +347,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             }
         } else {
             // Put this value inside the database
-            Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer);
+            Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer.toMap());
 
             if (task != null){
                 // The swimmer is successfully saved

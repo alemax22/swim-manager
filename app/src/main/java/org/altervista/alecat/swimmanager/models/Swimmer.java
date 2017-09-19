@@ -16,6 +16,9 @@ public class Swimmer {
     private int gender;
     private int level;
 
+    // Flag
+    private boolean selected = false;
+
     // Void constructor for firebase database
     public Swimmer(){}
 
@@ -48,6 +51,7 @@ public class Swimmer {
 
     public void setLevel (int level) { this.level = level; }
 
+    // Values that I want to save in the database
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", name);
@@ -59,5 +63,11 @@ public class Swimmer {
         return result;
     }
 
+    public boolean isSelected(){
+        return selected;
+    }
 
+    public void setSelection(boolean flag){
+        this.selected = flag;
+    }
 }
