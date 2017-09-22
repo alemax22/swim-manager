@@ -1,6 +1,7 @@
 package org.altervista.alecat.swimmanager.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Alessandro Cattapan on 01/09/2017.
@@ -14,12 +15,12 @@ public class Course {
     private int numLessonDone;
     private int numSwimmer;
     private String trainer;
-    private ArrayList<String> swimmer;
-    private ArrayList<CourseDay> date;
+    private HashMap<String, HashMap<String,Object>> swimmer;
+    private HashMap<String, Boolean> date;
 
     public Course(){}
 
-    public Course(String name, String trainer, int numLesson, int numSwimmer, ArrayList<String> swimmer, ArrayList<CourseDay> date) {
+    public Course(String name, String trainer, int numLesson, int numSwimmer, HashMap<String, HashMap<String,Object>> swimmer, HashMap<String, Boolean> date) {
         this.name = name;
         this.trainer = trainer;
         this.numLesson = numLesson;
@@ -57,9 +58,9 @@ public class Course {
         return numLessonDone;
     }
 
-    public ArrayList<String> getSwimmer() {return swimmer;}
+    public HashMap<String, HashMap<String,Object>> getSwimmer() {return swimmer;}
 
-    public ArrayList<CourseDay> getDate() {return date;}
+    public HashMap<String, Boolean> getDate() {return date;}
 
     public void setName(String name){
         this.name = name;
@@ -81,11 +82,11 @@ public class Course {
         this.numLessonDone = numLessonDone;
     }
 
-    public void setSwimmer(ArrayList<String> swimmer){
+    public void setSwimmer(HashMap<String, HashMap<String,Object>> swimmer){
         this.swimmer = swimmer;
     }
 
-    public void setdate(ArrayList<CourseDay> date){
+    public void setDate(HashMap<String, Boolean> date){
         this.date = date;
     }
 }

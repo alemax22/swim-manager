@@ -2,10 +2,8 @@ package org.altervista.alecat.swimmanager.editoractivity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,9 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
-import org.altervista.alecat.swimmanager.fragment.CourseFragment;
 import org.altervista.alecat.swimmanager.models.Course;
-import org.altervista.alecat.swimmanager.models.CourseDay;
+import org.altervista.alecat.swimmanager.models.Swimmer;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -34,15 +30,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
-import static org.altervista.alecat.swimmanager.data.SwimmerContract.ARRAY_LIST;
+import static org.altervista.alecat.swimmanager.data.SwimmerContract.ARRAY_LIST_REFERENCE;
+import static org.altervista.alecat.swimmanager.data.SwimmerContract.ARRAY_LIST_SWIMMER;
 import static org.altervista.alecat.swimmanager.data.SwimmerContract.DATE_FORMAT;
 
 public class CourseEditorActivity extends AppCompatActivity {
 
     private final static String TAG = CourseEditorActivity.class.getSimpleName();
 
-    private ArrayList<String> mReferenceArray;
+    private ArrayList<Swimmer> mSwimmerArray;
+    private ArrayList<String> mSwimmerArrayReference;
     private EditText mCourseNameEditText;
     private EditText mCourseTrainerEditText;
     private TextView mNumberSwimmerTextView;
@@ -74,7 +73,8 @@ public class CourseEditorActivity extends AppCompatActivity {
 
         // Retrieve data from intent
         Intent intent = getIntent();
-        mReferenceArray = intent.getStringArrayListExtra(ARRAY_LIST);
+        mSwimmerArray = (ArrayList<Swimmer>) intent.getSerializableExtra(ARRAY_LIST_SWIMMER);
+        mSwimmerArrayReference = intent.getStringArrayListExtra(ARRAY_LIST_REFERENCE);
 
         // Initialize Variables
         mCourseNameEditText = (EditText) findViewById(R.id.edit_course_name);
@@ -98,7 +98,7 @@ public class CourseEditorActivity extends AppCompatActivity {
         mEndDateTextView.setText(displayDate(today));
 
         // Set number of swimmer
-        mNumberSwimmerTextView.setText("" + mReferenceArray.size());
+        mNumberSwimmerTextView.setText("" + mSwimmerArray.size());
 
         // Set Listener
         mStartingDateTextView.setOnClickListener(new View.OnClickListener() {
@@ -224,17 +224,47 @@ public class CourseEditorActivity extends AppCompatActivity {
         String name = mCourseNameEditText.getText().toString();
         String trainer = mCourseTrainerEditText.getText().toString();
 
-        ArrayList<CourseDay> dates = getDates(startDate, endDate);
+        ArrayList<String> dates = getDates(startDate, endDate);
         Log.v(TAG,"Dates: " + dates.toString() + "; Total dates: " + dates.size());
+        Log.v(TAG,"References: " + mSwimmerArrayReference + "; Total references: " + mSwimmerArrayReference.size());
+
+        // Save number of swimmer
+        int count = mSwimmerArray.size();
+
+        // Get HashMaps
+        HashMap<String,HashMap<String,Object>> swimmerMap = getSwimmerMap();
+        HashMap<String,Boolean> dateMap = getDayMap(dates);
 
         // Save data to the database
-        Course currentCourse = new Course(name, trainer, dates.size(), mReferenceArray.size(), mReferenceArray, dates);
+        Course currentCourse = new Course(name, trainer, dates.size(), count, swimmerMap, dateMap);
+        Log.v(TAG,"ArrayReference = " + mSwimmerArrayReference.size() + "; ArraySwimmers = " + mSwimmerArray.size());
+        Log.v(TAG,"ArrayReference = " + dates.size());
         mCourseReference.push().setValue(currentCourse);
     }
 
+    // Get hashMap from two ArrayList
+    private HashMap<String, HashMap<String,Object>> getSwimmerMap(){
+        HashMap<String, HashMap<String,Object>> map = new HashMap<>();
+        while (!mSwimmerArray.isEmpty() && !mSwimmerArrayReference.isEmpty()){
+            Swimmer currentSwimmer = mSwimmerArray.remove(0);
+            String currentReference = mSwimmerArrayReference.remove(0);
+            map.put(currentReference, currentSwimmer.toMap());
+        }
+        return map;
+    }
 
-    private ArrayList<CourseDay> getDates (String from, String to){
-        ArrayList<CourseDay> dates = new ArrayList<CourseDay>();
+    // Get hashMap of days
+    private HashMap<String, Boolean> getDayMap(ArrayList<String> date){
+        HashMap<String, Boolean> map = new HashMap<>();
+        while (!date.isEmpty()){
+            String day = date.remove(0);
+            map.put(day, Boolean.FALSE);
+        }
+        return map;
+    }
+
+    private ArrayList<String> getDates (String from, String to){
+        ArrayList<String> dates = new ArrayList<String>();
         SimpleDateFormat formatter = new SimpleDateFormat(SwimmerContract.DATE_FORMAT);
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
@@ -245,7 +275,7 @@ public class CourseEditorActivity extends AppCompatActivity {
             int dayOfWeek = start.get(Calendar.DAY_OF_WEEK);
             if (mWeekDay[dayOfWeek]){
                 String date = formatter.format(start.getTime());
-                dates.add(new CourseDay(date));
+                dates.add(date);
             }
             start.add(Calendar.DAY_OF_MONTH,1);
         }

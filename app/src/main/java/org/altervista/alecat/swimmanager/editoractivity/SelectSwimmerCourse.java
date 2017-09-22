@@ -39,7 +39,8 @@ public class SelectSwimmerCourse extends AppCompatActivity {
     private FirebaseListAdapter<Swimmer> mSwimmerAdapter;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mSwimmerReference;
-    private ArrayList<String> mSelectedSwimmer;
+    private ArrayList<Swimmer> mSelectedSwimmer;
+    private ArrayList<String> mSelectedSwimmerReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,8 @@ public class SelectSwimmerCourse extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mSwimmerReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_INFO);
 
-        mSelectedSwimmer = new ArrayList<String>();
+        mSelectedSwimmer = new ArrayList<Swimmer>();
+        mSelectedSwimmerReference = new ArrayList<String>();
 
         // Set Adapter
         mSwimmerList = (ListView) findViewById(R.id.select_swimmer_list_view);
@@ -73,12 +75,14 @@ public class SelectSwimmerCourse extends AppCompatActivity {
                 Swimmer currentSwimmer = mSwimmerAdapter.getItem(i);
                 View check = view.findViewById(R.id.selected_swimmer_circle);
                 if (currentSwimmer.isSelected()){
+                    mSelectedSwimmer.remove(currentSwimmer);
                     mSelectedSwimmer.remove(reference);
                     currentSwimmer.setSelection(false);
                     check.setVisibility(View.GONE);
                     Log.v(TAG, "Deselected: " + reference);
                 } else {
-                    mSelectedSwimmer.add(reference);
+                    mSelectedSwimmer.add(currentSwimmer);
+                    mSelectedSwimmerReference.add(reference);
                    currentSwimmer.setSelection(true);
                     check.setVisibility(View.VISIBLE);
                     Log.v(TAG, "Selected: " + reference);
@@ -97,7 +101,8 @@ public class SelectSwimmerCourse extends AppCompatActivity {
                     toast.show();
                 } else {
                     Intent intent = new Intent(SelectSwimmerCourse.this, CourseEditorActivity.class);
-                    intent.putExtra(SwimmerContract.ARRAY_LIST, mSelectedSwimmer);
+                    intent.putExtra(SwimmerContract.ARRAY_LIST_SWIMMER, mSelectedSwimmer);
+                    intent.putExtra(SwimmerContract.ARRAY_LIST_REFERENCE, mSelectedSwimmerReference);
                     startActivityForResult(intent, COURSE_COMPLETION);
                 }
             }
