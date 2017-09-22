@@ -68,7 +68,8 @@ public class SelectSwimmerCourse extends AppCompatActivity {
         mSwimmerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String reference = mSwimmerAdapter.getRef(i).toString();
+                // Save only keys
+                String reference = mSwimmerAdapter.getRef(i).getKey().toString();
                 Swimmer currentSwimmer = mSwimmerAdapter.getItem(i);
                 View check = view.findViewById(R.id.selected_swimmer_circle);
                 if (currentSwimmer.isSelected()){

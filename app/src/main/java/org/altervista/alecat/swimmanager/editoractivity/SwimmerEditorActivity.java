@@ -527,13 +527,26 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     }
 
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+        DialogFragment newFragment = new SwimmerDatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "swimmerDatePicker");
     }
 
+    // This method returns the String date to display in the TextView field
+    private static String displayDate(Calendar calendar){
+        // Get a Date Object
+        Date selectedDate = calendar.getTime();
 
-    // Inner class that create a picker or choosing the swimmer's birthday
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+        // Set a patter for the date
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+        String dateToDisplay = dateFormatter.format(selectedDate);
+
+        return dateToDisplay;
+    }
+
+    // Inner class
+    public static class SwimmerDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        DatePickerDialog.OnDateSetListener mListener; //TODO: DatePicker
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -548,7 +561,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+            return new DatePickerDialog(getActivity(), mListener, year, month, day);
         }
 
         @Override
@@ -562,15 +575,4 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         }
     }
 
-    // This method returns the String date to display in the TextView field
-    private static String displayDate(Calendar calendar){
-        // Get a Date Object
-        Date selectedDate = calendar.getTime();
-
-        // Set a patter for the date
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        String dateToDisplay = dateFormatter.format(selectedDate);
-
-        return dateToDisplay;
-    }
 }

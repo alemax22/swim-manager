@@ -8,16 +8,25 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Checkable;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
+import org.altervista.alecat.swimmanager.fragment.CourseFragment;
+import org.altervista.alecat.swimmanager.models.Course;
+import org.altervista.alecat.swimmanager.models.CourseDay;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -31,13 +40,15 @@ import static org.altervista.alecat.swimmanager.data.SwimmerContract.DATE_FORMAT
 
 public class CourseEditorActivity extends AppCompatActivity {
 
-    private String mReference;
+    private final static String TAG = CourseEditorActivity.class.getSimpleName();
+
     private ArrayList<String> mReferenceArray;
     private EditText mCourseNameEditText;
     private EditText mCourseTrainerEditText;
     private TextView mNumberSwimmerTextView;
     private TextView mStartingDateTextView;
     private TextView mEndDateTextView;
+    private boolean[] mWeekDay = new boolean[8];
 
     // CheckBoxes
     private CheckBox mMondayCheckBox;
@@ -48,20 +59,22 @@ public class CourseEditorActivity extends AppCompatActivity {
     private CheckBox mSaturdayCheckBox;
     private CheckBox mSundayCheckBox;
 
+    // Firebase
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mCourseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_editor);
 
-        // Decide title of the Activity
+        // Initialize Firebase components
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mCourseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_COURSE_ACTIVE);
+
+        // Retrieve data from intent
         Intent intent = getIntent();
-        mReference = intent.getStringExtra(SwimmerContract.REFERENCE);
         mReferenceArray = intent.getStringArrayListExtra(ARRAY_LIST);
-        if (mReference == null){
-            setTitle(getString(R.string.activity_add_course_label));
-        } else {
-            setTitle(getString(R.string.activity_edit_course_label));
-        }
 
         // Initialize Variables
         mCourseNameEditText = (EditText) findViewById(R.id.edit_course_name);
@@ -78,6 +91,95 @@ public class CourseEditorActivity extends AppCompatActivity {
         mFridayCheckBox = (CheckBox) findViewById(R.id.checkbox_friday);
         mSaturdayCheckBox = (CheckBox) findViewById(R.id.checkbox_saturday);
         mSundayCheckBox = (CheckBox) findViewById(R.id.checkbox_sunday);
+
+        // Set date
+        Calendar today = Calendar.getInstance();
+        mStartingDateTextView.setText(displayDate(today));
+        mEndDateTextView.setText(displayDate(today));
+
+        // Set number of swimmer
+        mNumberSwimmerTextView.setText("" + mReferenceArray.size());
+
+        // Set Listener
+        mStartingDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(view, CourseDatePickerFragment.START_DATE_PICKER);
+            }
+        });
+
+        mEndDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(view, CourseDatePickerFragment.END_DATE_PICKER);
+            }
+        });
+
+        CompoundButton.OnCheckedChangeListener weekListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                switch (compoundButton.getId()){
+                    case R.id.checkbox_monday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.MONDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.MONDAY] = false;
+                        }
+                        break;
+                    case R.id.checkbox_tuesday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.TUESDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.TUESDAY] = false;
+                        }
+                        break;
+                    case R.id.checkbox_wednesday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.WEDNESDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.WEDNESDAY] = false;
+                        }
+                        break;
+                    case R.id.checkbox_thursday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.THURSDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.THURSDAY] = false;
+                        }
+                        break;
+                    case R.id.checkbox_friday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.FRIDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.FRIDAY] = false;
+                        }
+                        break;
+                    case R.id.checkbox_saturday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.SATURDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.SATURDAY] = false;
+                        }
+                        break;
+                    case R.id.checkbox_sunday:
+                        if(compoundButton.isChecked()){
+                            mWeekDay[Calendar.SUNDAY] = true;
+                        } else {
+                            mWeekDay[Calendar.SUNDAY] = false;
+                        }
+                        break;
+                }
+            }
+        };
+
+        // Set weekListener
+        mMondayCheckBox.setOnCheckedChangeListener(weekListener);
+        mTuesdayCheckBox.setOnCheckedChangeListener(weekListener);
+        mWednesdayCheckBox.setOnCheckedChangeListener(weekListener);
+        mThursdayCheckBox.setOnCheckedChangeListener(weekListener);
+        mFridayCheckBox.setOnCheckedChangeListener(weekListener);
+        mSaturdayCheckBox.setOnCheckedChangeListener(weekListener);
+        mSundayCheckBox.setOnCheckedChangeListener(weekListener);
 
     }
 
@@ -103,6 +205,8 @@ public class CourseEditorActivity extends AppCompatActivity {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 saveCourse();
+                setResult(RESULT_OK);
+                finish();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -115,17 +219,80 @@ public class CourseEditorActivity extends AppCompatActivity {
 
     private void saveCourse(){
         // TODO: Save Course
+        String startDate = mStartingDateTextView.getText().toString();
+        String endDate = mEndDateTextView.getText().toString();
+        String name = mCourseNameEditText.getText().toString();
+        String trainer = mCourseTrainerEditText.getText().toString();
+
+        ArrayList<CourseDay> dates = getDates(startDate, endDate);
+        Log.v(TAG,"Dates: " + dates.toString() + "; Total dates: " + dates.size());
+
+        // Save data to the database
+        Course currentCourse = new Course(name, trainer, dates.size(), mReferenceArray.size(), mReferenceArray, dates);
+        mCourseReference.push().setValue(currentCourse);
     }
 
-    // Inner class that create a picker or choosing the swimmer's birthday
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+    private ArrayList<CourseDay> getDates (String from, String to){
+        ArrayList<CourseDay> dates = new ArrayList<CourseDay>();
+        SimpleDateFormat formatter = new SimpleDateFormat(SwimmerContract.DATE_FORMAT);
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.setTime(formatter.parse(from, new ParsePosition(0)));
+        end.setTime(formatter.parse(to, new ParsePosition(0)));
+
+        while (start.compareTo(end) <= 0){
+            int dayOfWeek = start.get(Calendar.DAY_OF_WEEK);
+            if (mWeekDay[dayOfWeek]){
+                String date = formatter.format(start.getTime());
+                dates.add(new CourseDay(date));
+            }
+            start.add(Calendar.DAY_OF_MONTH,1);
+        }
+        return dates;
+    }
+
+    // This method returns the String date to display in the TextView field
+    private static String displayDate(Calendar calendar){
+        // Get a Date Object
+        Date selectedDate = calendar.getTime();
+
+        // Set a patter for the date
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+        String dateToDisplay = dateFormatter.format(selectedDate);
+
+        return dateToDisplay;
+    }
+
+    public void showDatePickerDialog(View v, int idPicker) {
+        CourseDatePickerFragment newFragment = new CourseEditorActivity.CourseDatePickerFragment();
+        newFragment.setNumberPicker(idPicker);
+        newFragment.show(getSupportFragmentManager(), "courseDatePicker" + idPicker);
+    }
+
+    // Inner class
+    public static class CourseDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        public static final int START_DATE_PICKER = 0;
+        public static final int END_DATE_PICKER = 1;
+        private int mNumPicker;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the selected date as the default date in the picker
-            TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
+            TextView dateView = null;
+            switch (mNumPicker) {
+                case START_DATE_PICKER:
+                    dateView = getActivity().findViewById(R.id.text_course_starting_date);
+                    break;
+                case END_DATE_PICKER:
+                    dateView = getActivity().findViewById(R.id.text_course_end_date);
+                    break;
+                default:
+                    Log.v("CourseDatePicker","Error");
+            }
             SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-            Date date = dateFormatter.parse(birthdayText.getText().toString(), new ParsePosition(0));
+            Date date = dateFormatter.parse(dateView.getText().toString(), new ParsePosition(0));
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             int year = c.get(Calendar.YEAR);
@@ -139,23 +306,26 @@ public class CourseEditorActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             // Update the View after the user selects the swimmer's birthday
-            TextView birthdayText = getActivity().findViewById(R.id.text_swimmer_birthday);
+            TextView textViewUpdate;
+            switch (mNumPicker){
+                case START_DATE_PICKER:
+                    textViewUpdate = getActivity().findViewById(R.id.text_course_starting_date);
+                    break;
+                case END_DATE_PICKER:
+                    textViewUpdate = getActivity().findViewById(R.id.text_course_end_date);
+                    break;
+                default:
+                    Log.v("CourseDatePicker","Error");
+                    return;
+            }
             Calendar calendar = new GregorianCalendar(year, month, day);
 
             // Display the date inside the TextView
-            birthdayText.setText(displayDate(calendar));
+            textViewUpdate.setText(displayDate(calendar));
         }
-    }
 
-    // This method returns the String date to display in the TextView field
-    private static String displayDate(Calendar calendar){
-        // Get a Date Object
-        Date selectedDate = calendar.getTime();
-
-        // Set a patter for the date
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        String dateToDisplay = dateFormatter.format(selectedDate);
-
-        return dateToDisplay;
+        public void setNumberPicker(int num){
+            this.mNumPicker = num;
+        }
     }
 }

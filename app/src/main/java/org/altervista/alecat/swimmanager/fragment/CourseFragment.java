@@ -105,9 +105,9 @@ public class CourseFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String reference = mCourseAdapter.getRef(i).toString();
                 Log.v(TAG, "Reference: " + reference);
-                Intent intent =  new Intent(getActivity(), CourseEditorActivity.class);
-                intent.putExtra(SwimmerContract.REFERENCE, reference);
-                startActivity(intent);
+//                Intent intent =  new Intent(getActivity(), CourseEditorActivity.class);
+//                intent.putExtra(SwimmerContract.REFERENCE, reference);
+//                startActivity(intent);
             }
         });
 
