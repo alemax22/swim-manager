@@ -339,6 +339,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         Swimmer swimmer = new Swimmer(correctName, correctSurname, birthday, gender,level);
         if (mReference != null){
             Task task = mSwimmerInfoDatabaseReference.child(mReference).updateChildren(swimmer.toMap()); // TODO: Implement DatabaseReference.CompletionListener listener
+
             if (task != null){
                 // The swimmer is successfully updated
                 Toast.makeText(getApplicationContext(), R.string.swimmer_updated, Toast.LENGTH_SHORT).show();
@@ -546,8 +547,6 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     // Inner class
     public static class SwimmerDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
-        DatePickerDialog.OnDateSetListener mListener; //TODO: DatePicker
-
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the selected date as the default date in the picker
@@ -561,7 +560,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), mListener, year, month, day);
+            return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
         @Override

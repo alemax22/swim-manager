@@ -21,12 +21,20 @@
         </activity>
         <activity
             android:name=".editoractivity.SwimmerEditorActivity"
-            android:parentActivityName=".SwimManagerActivity" />
-        <activity
-            android:name=".editoractivity.CourseEditorActivity" />
+            android:parentActivityName=".ui.SwimmerInfoActivity" />
+        <activity android:name=".editoractivity.CourseEditorActivity" />
         <activity
             android:name=".editoractivity.SelectSwimmerCourse"
-            android:parentActivityName=".SwimManagerActivity"/>
+            android:parentActivityName=".SwimManagerActivity" />
+        <activity
+            android:name=".ui.SwimmerInfoActivity"
+            android:label="@string/title_activity_swimmer_info"
+            android:parentActivityName=".SwimManagerActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.altervista.alecat.swimmanager.SwimManagerActivity" />
+        </activity>
     </application>
 
 </manifest>

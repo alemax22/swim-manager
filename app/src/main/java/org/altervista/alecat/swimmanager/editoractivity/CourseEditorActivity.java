@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.util.ObjectsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,10 +32,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static org.altervista.alecat.swimmanager.data.SwimmerContract.ARRAY_LIST_REFERENCE;
 import static org.altervista.alecat.swimmanager.data.SwimmerContract.ARRAY_LIST_SWIMMER;
 import static org.altervista.alecat.swimmanager.data.SwimmerContract.DATE_FORMAT;
+import static org.altervista.alecat.swimmanager.data.SwimmerContract.NODE_SWIMMER_COURSE_ACTIVE;
 
 public class CourseEditorActivity extends AppCompatActivity {
 
@@ -61,6 +65,7 @@ public class CourseEditorActivity extends AppCompatActivity {
     // Firebase
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mCourseReference;
+    private DatabaseReference mSwimmerCourseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +75,9 @@ public class CourseEditorActivity extends AppCompatActivity {
         // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mCourseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_COURSE_ACTIVE);
+        mSwimmerCourseReference = mFirebaseDatabase.getReference().child(SwimmerContract.NODE_SWIMMER_COURSE_ACTIVE);
 
-        // Retrieve data from intent
+                // Retrieve data from intent
         Intent intent = getIntent();
         mSwimmerArray = (ArrayList<Swimmer>) intent.getSerializableExtra(ARRAY_LIST_SWIMMER);
         mSwimmerArrayReference = intent.getStringArrayListExtra(ARRAY_LIST_REFERENCE);
@@ -230,25 +236,45 @@ public class CourseEditorActivity extends AppCompatActivity {
 
         // Save number of swimmer
         int count = mSwimmerArray.size();
+        int numLesson = dates.size();
 
         // Get HashMaps
-        HashMap<String,HashMap<String,Object>> swimmerMap = getSwimmerMap();
+        HashMap<String,Boolean> swimmerMap = getSwimmerMap();
         HashMap<String,Boolean> dateMap = getDayMap(dates);
 
-        // Save data to the database
-        Course currentCourse = new Course(name, trainer, dates.size(), count, swimmerMap, dateMap);
+        // Prepare data for the database
+        Course currentCourse = new Course(name, trainer, numLesson, count, swimmerMap, dateMap);
         Log.v(TAG,"ArrayReference = " + mSwimmerArrayReference.size() + "; ArraySwimmers = " + mSwimmerArray.size());
         Log.v(TAG,"ArrayReference = " + dates.size());
-        mCourseReference.push().setValue(currentCourse);
+
+        // Save data
+        DatabaseReference databaseReference = mCourseReference.push();
+        String courseKey = databaseReference.getKey();
+        databaseReference.setValue(currentCourse);
+        HashMap<String,Object> hashMap = createHashMap(dateMap, courseKey);
+        mSwimmerCourseReference.updateChildren(hashMap);
+    }
+
+    // Create the Swimmer-Course-node
+    private HashMap<String,Object> createHashMap(HashMap<String,Boolean> date, String courseKey){
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        while(!mSwimmerArrayReference.isEmpty()){
+            // Path to the database
+            String reference = mSwimmerArrayReference.remove(0) + "/" + courseKey;
+            map.put(reference, date);
+        }
+        return map;
     }
 
     // Get hashMap from two ArrayList
-    private HashMap<String, HashMap<String,Object>> getSwimmerMap(){
-        HashMap<String, HashMap<String,Object>> map = new HashMap<>();
-        while (!mSwimmerArray.isEmpty() && !mSwimmerArrayReference.isEmpty()){
-            Swimmer currentSwimmer = mSwimmerArray.remove(0);
-            String currentReference = mSwimmerArrayReference.remove(0);
-            map.put(currentReference, currentSwimmer.toMap());
+    private HashMap<String, Boolean> getSwimmerMap(){
+        HashMap<String, Boolean> map = new HashMap<>();
+        Iterator<Swimmer> swimmerIterator = mSwimmerArray.iterator();
+        Iterator<String> stringIterator = mSwimmerArrayReference.iterator();
+        while (swimmerIterator.hasNext() && stringIterator.hasNext()){
+            Swimmer currentSwimmer = swimmerIterator.next();
+            String currentReference = stringIterator.next();
+            map.put(currentReference, Boolean.TRUE);
         }
         return map;
     }

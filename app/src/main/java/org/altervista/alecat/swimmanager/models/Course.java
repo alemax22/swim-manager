@@ -15,12 +15,12 @@ public class Course {
     private int numLessonDone;
     private int numSwimmer;
     private String trainer;
-    private HashMap<String, HashMap<String,Object>> swimmer;
+    private HashMap<String, Boolean> swimmer;
     private HashMap<String, Boolean> date;
 
     public Course(){}
 
-    public Course(String name, String trainer, int numLesson, int numSwimmer, HashMap<String, HashMap<String,Object>> swimmer, HashMap<String, Boolean> date) {
+    public Course(String name, String trainer, int numLesson, int numSwimmer, HashMap<String, Boolean> swimmer, HashMap<String, Boolean> date) {
         this.name = name;
         this.trainer = trainer;
         this.numLesson = numLesson;
@@ -28,14 +28,6 @@ public class Course {
         this.numLessonDone = 0;
         this.swimmer = swimmer;
         this.date = date;
-    }
-
-    public Course(String name, String trainer, int numLesson, int numLessonDone, int numSwimmer) {
-        this.name = name;
-        this.trainer = trainer;
-        this.numLesson = numLesson;
-        this.numSwimmer = numSwimmer;
-        this.numLessonDone = numLessonDone;
     }
 
     public String getName(){
@@ -58,7 +50,7 @@ public class Course {
         return numLessonDone;
     }
 
-    public HashMap<String, HashMap<String,Object>> getSwimmer() {return swimmer;}
+    public HashMap<String, Boolean> getSwimmer() {return swimmer;}
 
     public HashMap<String, Boolean> getDate() {return date;}
 
@@ -82,7 +74,7 @@ public class Course {
         this.numLessonDone = numLessonDone;
     }
 
-    public void setSwimmer(HashMap<String, HashMap<String,Object>> swimmer){
+    public void setSwimmer(HashMap<String, Boolean> swimmer){
         this.swimmer = swimmer;
     }
 
