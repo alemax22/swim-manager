@@ -41,11 +41,11 @@ public class CourseAdapter extends FirebaseListAdapter<Course> {
 
         // Set Swimmers
         TextView textViewSwimmer = (TextView) view.findViewById(R.id.text_number_swimmer);
-        textViewTrainer.setText(SWIMMER + ": " + course.getNumSwimmer());
+        textViewSwimmer.setText(SWIMMER + ": " + course.getNumSwimmer());
 
         // Set Lessons
         TextView textViewLesson = (TextView) view.findViewById(R.id.text_number_lesson);
-        textViewTrainer.setText(LESSON + ": " + course.getNumLessonDone() + " / " + course.getNumLesson());
+        textViewLesson.setText(LESSON + ": " + course.getNumLessonDone() + " / " + course.getNumLesson());
 
     }
 }

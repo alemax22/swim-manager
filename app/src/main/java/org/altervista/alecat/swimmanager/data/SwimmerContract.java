@@ -29,6 +29,10 @@ public final class SwimmerContract {
     // Reference
     public static final String REFERENCE = "firebase-reference";
 
+    // ArrayList
+    public static final String ARRAY_LIST_SWIMMER = "list-selected-swimmer";
+    public static final String ARRAY_LIST_REFERENCE = "list-selected-swimmer-reference";
+
     // Firebase main nodes
     public static final String NODE_SWIMMER_INFO = "swimmer";
     public static final String NODE_SWIMMER_COURSE_ACTIVE = "swimmer-course";

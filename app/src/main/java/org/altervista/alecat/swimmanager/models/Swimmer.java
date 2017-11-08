@@ -1,5 +1,6 @@
 package org.altervista.alecat.swimmanager.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Created by Alessandro Cattapan on 23/08/2017.
  */
 
-public class Swimmer {
+public class Swimmer implements Serializable{
 
     // This class describes a swimmingpool user
     private String name;
@@ -15,6 +16,9 @@ public class Swimmer {
     private String birthday;
     private int gender;
     private int level;
+
+    // Flag
+    private boolean selected = false;
 
     // Void constructor for firebase database
     public Swimmer(){}
@@ -48,7 +52,8 @@ public class Swimmer {
 
     public void setLevel (int level) { this.level = level; }
 
-    public Map<String, Object> toMap() {
+    // Values that I want to save in the database
+    public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", name);
         result.put("surname", surname);
@@ -59,5 +64,11 @@ public class Swimmer {
         return result;
     }
 
+    public boolean isSelected(){
+        return selected;
+    }
 
+    public void setSelection(boolean flag){
+        this.selected = flag;
+    }
 }

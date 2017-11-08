@@ -325,19 +325,6 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         int level = mLevel;
         String birthday = mBirthdayTextView.getText().toString().trim();
 
-        // Get today date
-        /*SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        String today = dateFormatter.format(new Date());
-
-        // If there isn't any change inside the Activity simply return
-        // to the main activity without doing anything
-        if (mUri == null && TextUtils.isEmpty(name) && TextUtils.isEmpty(surname) && birthday.equals(today)
-                && gender == SwimmerContract.GENDER_UNKNOWN && level == SwimmerContract.LEVEL_UNKNOWN){
-
-            // Return to the previous activity
-            finish();
-        }*/
-
         // Data validation
         if (!checkData(name, surname, birthday)){
             // Stay inside the Editor Activity
@@ -352,6 +339,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         Swimmer swimmer = new Swimmer(correctName, correctSurname, birthday, gender,level);
         if (mReference != null){
             Task task = mSwimmerInfoDatabaseReference.child(mReference).updateChildren(swimmer.toMap()); // TODO: Implement DatabaseReference.CompletionListener listener
+
             if (task != null){
                 // The swimmer is successfully updated
                 Toast.makeText(getApplicationContext(), R.string.swimmer_updated, Toast.LENGTH_SHORT).show();
@@ -360,7 +348,7 @@ public class SwimmerEditorActivity extends AppCompatActivity {
             }
         } else {
             // Put this value inside the database
-            Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer);
+            Task task = mSwimmerInfoDatabaseReference.push().setValue(swimmer.toMap());
 
             if (task != null){
                 // The swimmer is successfully saved
@@ -540,13 +528,24 @@ public class SwimmerEditorActivity extends AppCompatActivity {
     }
 
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+        DialogFragment newFragment = new SwimmerDatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "swimmerDatePicker");
     }
 
+    // This method returns the String date to display in the TextView field
+    private static String displayDate(Calendar calendar){
+        // Get a Date Object
+        Date selectedDate = calendar.getTime();
 
-    // Inner class that create a picker or choosing the swimmer's birthday
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+        // Set a patter for the date
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+        String dateToDisplay = dateFormatter.format(selectedDate);
+
+        return dateToDisplay;
+    }
+
+    // Inner class
+    public static class SwimmerDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -575,15 +574,4 @@ public class SwimmerEditorActivity extends AppCompatActivity {
         }
     }
 
-    // This method returns the String date to display in the TextView field
-    private static String displayDate(Calendar calendar){
-        // Get a Date Object
-        Date selectedDate = calendar.getTime();
-
-        // Set a patter for the date
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        String dateToDisplay = dateFormatter.format(selectedDate);
-
-        return dateToDisplay;
-    }
 }

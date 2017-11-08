@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -44,6 +45,12 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
 
     @Override
     protected void populateView(View view, Swimmer swimmer, int position) {
+        // Reset View state
+        View birthdayView = view.findViewById(R.id.birthday_image);
+        birthdayView.setVisibility(View.GONE);
+        View checkView = view.findViewById(R.id.selected_swimmer_circle);
+        checkView.setVisibility(View.GONE);
+
         // Set the swimmer's Name and Surname string inside the texView
         String nameSurname = swimmer.getName() + " " + swimmer.getSurname();
         ((TextView) view.findViewById(R.id.text_swimmer_name_surname)).setText(nameSurname);
@@ -68,13 +75,19 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
         // Set the color on the circle
         swimmerCircle.setColor(swimmerCircleColor);
 
+        //TODO: Check if selected
+        if (view.isSelected()){
+            checkView.setVisibility(View.VISIBLE);
+        }
+
         // If it is the swimmer's birthday show the icon
         if (isBirthday(swimmer.getBirthday())){
-            view.findViewById(R.id.birthday_image).setVisibility(View.VISIBLE);
+            birthdayView.setVisibility(View.VISIBLE);
         }
-        else
-        {
-            view.findViewById(R.id.birthday_image).setVisibility(View.GONE);
+
+        // Check if it is selected
+        if (swimmer.isSelected()) {
+            checkView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -82,6 +95,7 @@ public class SwimmerAdapter extends FirebaseListAdapter<Swimmer> {
         // Get a Date object from a string
         SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         Date birthdayDate = dateFormatter.parse(birthdayString, new ParsePosition(0));
+
         long timeInMillis = birthdayDate.getTime();
 
         // Joda Library: Birthday

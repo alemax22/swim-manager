@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/course_name"
+                    android:text="@string/course_text_trainer"
                     android:layout_weight="1"
                     style="@style/CategoryStyle" />
 
@@ -92,13 +92,136 @@
                     android:layout_weight="1"
                     tools:text="24"/>
             </LinearLayout>
-            <Button
-                android:layout_margin="16dp"
-                android:id="@+id/button_select_swimmers"
+
+            <!-- Course days category -->
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
+
+                <!-- Label -->
+                <TextView
+                    android:text="@string/category_starting_date"
+                    style="@style/CategoryStyle" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_starting_date_error"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true">
+
+                    <!-- Birthday field -->
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingLeft="4dp"
+                        android:id="@+id/text_course_starting_date"
+                        tools:text="dd MMM yyyy"
+                        style="@style/EditorFieldStyle" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+            <!-- Course days category -->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
+
+                <!-- Label -->
+                <TextView
+                    android:text="@string/category_end_date"
+                    style="@style/CategoryStyle" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_end_date_error"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true">
+
+                    <!-- Birthday field -->
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingLeft="4dp"
+                        android:id="@+id/text_course_end_date"
+                        tools:text="dd MMM yyyy"
+                        style="@style/EditorFieldStyle" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+            <TextView
+                android:paddingTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button_select_swimmers"
-                android:layout_gravity="center_horizontal"/>
+                android:text="Week Days"
+                android:textColor="@color/colorAccent"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkbox_monday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox_tuesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox_wednesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="W"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox_thursday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox_friday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="F"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox_saturday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox_sunday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

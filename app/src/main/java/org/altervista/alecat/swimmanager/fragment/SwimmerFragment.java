@@ -24,7 +24,7 @@ import org.altervista.alecat.swimmanager.adapter.SwimmerAdapter;
 import org.altervista.alecat.swimmanager.editoractivity.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.models.Swimmer;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
-
+import org.altervista.alecat.swimmanager.ui.SwimmerInfoActivity;
 
 
 /**
@@ -139,9 +139,9 @@ public class SwimmerFragment extends Fragment{
         mSwimmerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String reference = mSwimmerAdapter.getRef(i).toString();
+                String reference = mSwimmerAdapter.getRef(i).getKey().toString();
                 Log.v(TAG, "Reference: " + reference);
-                Intent intent =  new Intent(getActivity(), SwimmerEditorActivity.class);
+                Intent intent =  new Intent(getContext(), SwimmerInfoActivity.class);
                 intent.putExtra(SwimmerContract.REFERENCE, reference);
                 startActivity(intent);
             }
