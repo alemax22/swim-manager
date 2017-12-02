@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.altervista.alecat.swimmanager">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,6 +31,15 @@
         <activity
             android:name=".ui.SwimmerInfoActivity"
             android:label="@string/title_activity_swimmer_info"
+            android:parentActivityName=".SwimManagerActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.altervista.alecat.swimmanager.SwimManagerActivity" />
+        </activity>
+        <activity
+            android:name=".ui.SwimPDFReader"
+            android:label="@string/title_activity_pdfreader"
             android:parentActivityName=".SwimManagerActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

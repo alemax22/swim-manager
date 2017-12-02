@@ -21,11 +21,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-import org.altervista.alecat.swimmanager.editoractivity.CourseEditorActivity;
 import org.altervista.alecat.swimmanager.editoractivity.SelectSwimmerCourse;
 import org.altervista.alecat.swimmanager.fragment.CourseFragment;
 import org.altervista.alecat.swimmanager.editoractivity.SwimmerEditorActivity;
 import org.altervista.alecat.swimmanager.fragment.SwimmerFragment;
+import org.altervista.alecat.swimmanager.ui.SwimPDFReader;
 
 import java.util.Arrays;
 
@@ -98,6 +98,15 @@ public class SwimManagerActivity extends AppCompatActivity implements SwimmerFra
                         break;
                 }
 
+            }
+        });
+        //TODO: !!!!!!!!!!!!!!!!! Remove Backdoor !!!!!!!!!!!!!!!!!!!!!!!!
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent =  new Intent(SwimManagerActivity.this, SwimPDFReader.class);
+                startActivity(intent);
+                return true;
             }
         });
 
