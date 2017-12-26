@@ -12,6 +12,7 @@ public final class SwimmerContract {
 
     // Date Format
     public static final String DATE_FORMAT = "dd MMM yyyy";
+    public static final String DATE_PDF_INPUT_FORMAT = "dd/MM/yyyy";
 
     // Useful constants inside this app
     // Swimmer's genders
@@ -25,6 +26,16 @@ public final class SwimmerContract {
     public static final int LEVEL_TWO = 2;
     public static final int LEVEL_THREE = 3;
     public static final int LEVEL_FOUR = 4;
+
+    // Competition
+    // Pool length
+    public static final int POOL_LENGTH_25 = 25;
+    public static final int POOL_LENGTH_50 = 50;
+    // Chrono
+    public static final int TIMING_UNKNOWN = 0;
+    public static final int TIMING_MANUAL = 1;
+    public static final int TIMING_AUTOMATIC = 2;
+
 
     // Reference
     public static final String REFERENCE = "firebase-reference";

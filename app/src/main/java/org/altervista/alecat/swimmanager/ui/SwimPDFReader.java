@@ -3,8 +3,8 @@ package org.altervista.alecat.swimmanager.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,12 +13,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.altervista.alecat.swimmanager.R;
-import org.altervista.alecat.swimmanager.utils.PDFReader;
+import org.altervista.alecat.swimmanager.models.CompetitionResult;
+import org.altervista.alecat.swimmanager.models.Rank;
+import org.altervista.alecat.swimmanager.utils.MyPDFReader;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class SwimPDFReader extends AppCompatActivity {
 
@@ -28,7 +31,7 @@ public class SwimPDFReader extends AppCompatActivity {
     private InputStream mInputStream;
     private TextView mTextView;
     private Uri mUri;
-    private PDFReader PDF;
+    private MyPDFReader PDF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,16 +110,23 @@ public class SwimPDFReader extends AppCompatActivity {
                 }
 
                 // Create object to read PDF
-                PDF = new PDFReader(mInputStream);
-
-                // Change Text
-                try{
-                    mTextView.setText(PDF.getData());
-                }
-                catch(MalformedURLException e){
-                    Log.e(TAG, "Error Malformed URL Exception!");
+                PDF = new MyPDFReader(mInputStream);
+                try {
+                    ArrayList<Rank> ranks = PDF.getAllRank();
+                    mTextView.setText(ranks.get(4).getRank());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
+        }
+    }
+
+    // Inner Thread class
+    private class searchResultInsidePdf extends AsyncTask<MyPDFReader, Integer, ArrayList<CompetitionResult>>{
+
+        @Override
+        protected ArrayList<CompetitionResult> doInBackground(MyPDFReader... myPDFReaders) {
+            return null;
         }
     }
 
