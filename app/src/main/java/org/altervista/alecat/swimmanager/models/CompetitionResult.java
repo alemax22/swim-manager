@@ -11,12 +11,12 @@ public class CompetitionResult {
     private ArrayList<Swimmer> swimmerList; // If it contains only one swimmer it is an individual race
     private String place;
     private String date;
-    private String race; // 100 Stile Libero
+    private Race race; // 100 Stile Libero
     private int poolLength;
     private int time; // milliseconds
     private int timingType;
 
-    public CompetitionResult(String competitionName, String place, String date, String race, int poolLength, Swimmer swimmer, int time, int timingType) {
+    public CompetitionResult(String competitionName, String place, String date, Race race, int poolLength, Swimmer swimmer, int time, int timingType) {
         this.competitionName = competitionName;
         this.place = place;
         this.date = date;
@@ -51,11 +51,11 @@ public class CompetitionResult {
         this.date = date;
     }
 
-    public String getRace() {
+    public Race getRace() {
         return race;
     }
 
-    public void setRace(String race) {
+    public void setRace(Race race) {
         this.race = race;
     }
 

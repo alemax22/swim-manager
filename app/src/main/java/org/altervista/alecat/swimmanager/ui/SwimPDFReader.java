@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.altervista.alecat.swimmanager.R;
+import org.altervista.alecat.swimmanager.data.SwimmerContract;
 import org.altervista.alecat.swimmanager.models.CompetitionResult;
 import org.altervista.alecat.swimmanager.models.Rank;
 import org.altervista.alecat.swimmanager.utils.MyPDFReader;
@@ -21,7 +22,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SwimPDFReader extends AppCompatActivity {
 
@@ -37,6 +41,7 @@ public class SwimPDFReader extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdfreader);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

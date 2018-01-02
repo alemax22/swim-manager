@@ -10,9 +10,10 @@ public final class SwimmerContract {
     private SwimmerContract() {
     }
 
-    // Date Format
+    // Date and Time Format
     public static final String DATE_FORMAT = "dd MMM yyyy";
     public static final String DATE_PDF_INPUT_FORMAT = "dd/MM/yyyy";
+    public static final String TIME_FORMAT = "mm:ss.SS";
 
     // Useful constants inside this app
     // Swimmer's genders

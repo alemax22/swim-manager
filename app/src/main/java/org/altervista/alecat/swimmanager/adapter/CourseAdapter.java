@@ -25,6 +25,7 @@ public class CourseAdapter extends FirebaseListAdapter<Course> {
     }
 
     @Override
+
     protected void populateView(View view, Course course, int position) {
 
         final String TRAINER = mContext.getString(R.string.course_text_trainer);

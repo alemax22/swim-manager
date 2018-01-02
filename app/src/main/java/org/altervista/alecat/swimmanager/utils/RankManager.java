@@ -7,10 +7,12 @@ import com.itextpdf.text.pdf.PdfReader;
 import org.altervista.alecat.swimmanager.interfaces.FinPdfReader;
 import org.altervista.alecat.swimmanager.models.CompetitionResult;
 import org.altervista.alecat.swimmanager.models.Rank;
+import org.altervista.alecat.swimmanager.models.Swimmer;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by Alessandro Cattapan on 26/12/2017.
@@ -22,6 +24,7 @@ public class RankManager {
 
     private FinPdfReader finPdfReader;
     private ArrayList<Rank> rankList = null;
+    private String societyName =  null;
     private ArrayList<CompetitionResult> competitionResultsList = null;
     private String competitionName = null;
     private String date = null;
@@ -29,8 +32,9 @@ public class RankManager {
     private int poolMeters = -1;
     private int timingType = -1;
 
-    public RankManager(FinPdfReader finPdfReader){
+    public RankManager(FinPdfReader finPdfReader, String societyName){
         this.finPdfReader = finPdfReader;
+        this.societyName = societyName.toUpperCase();
     }
 
     public ArrayList<CompetitionResult> getResult(){
@@ -84,6 +88,14 @@ public class RankManager {
             }
         }
         return individualRankList;
+    }
+
+    public void setSocietyName(String name){
+        societyName = name.toUpperCase();
+    }
+
+    public String getSocietyName(){
+        return societyName;
     }
 
     public ArrayList<Rank> getAllRank(){
@@ -170,6 +182,27 @@ public class RankManager {
 
     private void searchIndividualResult(Rank rank){
         // TODO: Complete this method
+        Scanner scanner = new Scanner(rank.getRank());
+        while (scanner.hasNextLine()){
+            String line = scanner.nextLine();
+            if (line.contains(societyName)){
+                Scanner console = new Scanner(line);
+                console.useDelimiter(societyName);
+                String string = console.next();
+                String time = console.next();
+                Swimmer swimmer = new Swimmer();
+                /*competitionResultsList.add(
+                        new CompetitionResult(getCompetitionName(),
+                                getPlace(),
+                                getDate(),
+                                rank.getRace(),
+                                getPoolMeters(),
+                                swimmer,
+                                time,
+                                getTimingType()));*/
+            }
+        }
+        scanner.close();
     }
 
     private void searchRelayResult(Rank rank){
