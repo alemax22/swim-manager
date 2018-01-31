@@ -16,7 +16,9 @@ import org.altervista.alecat.swimmanager.R;
 import org.altervista.alecat.swimmanager.data.SwimmerContract;
 import org.altervista.alecat.swimmanager.models.CompetitionResult;
 import org.altervista.alecat.swimmanager.models.Rank;
+import org.altervista.alecat.swimmanager.models.Timing;
 import org.altervista.alecat.swimmanager.utils.MyPDFReader;
+import org.altervista.alecat.swimmanager.utils.RankManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -49,7 +51,10 @@ public class SwimPDFReader extends AppCompatActivity {
             mTextView.setText(mUri.toString());
         }
 
+
+        // TODO: Debug method
         mTextView = findViewById(R.id.PDF);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabPDF);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -116,12 +121,16 @@ public class SwimPDFReader extends AppCompatActivity {
 
                 // Create object to read PDF
                 PDF = new MyPDFReader(mInputStream);
-                try {
-                    ArrayList<Rank> ranks = PDF.getAllRank();
-                    mTextView.setText(ranks.get(4).getRank());
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+                RankManager rankManager = new RankManager(PDF, "OBIETTIVO ACQUA");
+                ArrayList<CompetitionResult> list = rankManager.getResult();
+
+                String out = "";
+                while(!list.isEmpty()){
+                    CompetitionResult result = list.remove(0);
+                    out = out + result.getRace() + " " + result.getTime() + "\n";
                 }
+                mTextView.setText(out);
             }
         }
     }

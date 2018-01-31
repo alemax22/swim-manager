@@ -8,6 +8,7 @@ import org.altervista.alecat.swimmanager.interfaces.FinPdfReader;
 import org.altervista.alecat.swimmanager.models.CompetitionResult;
 import org.altervista.alecat.swimmanager.models.Rank;
 import org.altervista.alecat.swimmanager.models.Swimmer;
+import org.altervista.alecat.swimmanager.models.Timing;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -48,9 +49,10 @@ public class RankManager {
             }
 
             // Get relay race result
+            /* TODO: Complete
             while (relayRakList.size() != 0){
                 searchRelayResult(relayRakList.remove(0));
-            }
+            }*/
 
         }
         return competitionResultsList;
@@ -185,21 +187,24 @@ public class RankManager {
         Scanner scanner = new Scanner(rank.getRank());
         while (scanner.hasNextLine()){
             String line = scanner.nextLine();
-            if (line.contains(societyName)){
-                Scanner console = new Scanner(line);
-                console.useDelimiter(societyName);
-                String string = console.next();
-                String time = console.next();
-                Swimmer swimmer = new Swimmer();
-                /*competitionResultsList.add(
-                        new CompetitionResult(getCompetitionName(),
-                                getPlace(),
-                                getDate(),
-                                rank.getRace(),
-                                getPoolMeters(),
-                                swimmer,
-                                time,
-                                getTimingType()));*/
+            if (!line.substring(0,1).equals("-")) {
+                if (line.contains(societyName)) {
+                    Scanner console = new Scanner(line);
+                    console.useDelimiter(societyName);
+                    String string = console.next();
+                    String timeString = console.next();
+                    Timing time = new Timing(timeString);
+                    Swimmer swimmer = new Swimmer();
+                    competitionResultsList.add(
+                            new CompetitionResult(getCompetitionName(),
+                                    getPlace(),
+                                    getDate(),
+                                    rank.getRace(),
+                                    getPoolMeters(),
+                                    swimmer,
+                                    time.getTimeMillis(),
+                                    getTimingType()));
+                }
             }
         }
         scanner.close();

@@ -13,10 +13,10 @@ public class CompetitionResult {
     private String date;
     private Race race; // 100 Stile Libero
     private int poolLength;
-    private int time; // milliseconds
+    private long time; // milliseconds
     private int timingType;
 
-    public CompetitionResult(String competitionName, String place, String date, Race race, int poolLength, Swimmer swimmer, int time, int timingType) {
+    public CompetitionResult(String competitionName, String place, String date, Race race, int poolLength, Swimmer swimmer, long time, int timingType) {
         this.competitionName = competitionName;
         this.place = place;
         this.date = date;
@@ -83,11 +83,11 @@ public class CompetitionResult {
         return swimmerList.size();
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
