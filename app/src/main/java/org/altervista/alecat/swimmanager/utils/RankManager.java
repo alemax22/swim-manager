@@ -1,18 +1,16 @@
 package org.altervista.alecat.swimmanager.utils;
 
+import android.nfc.Tag;
 import android.util.Log;
-
-import com.itextpdf.text.pdf.PdfReader;
 
 import org.altervista.alecat.swimmanager.interfaces.FinPdfReader;
 import org.altervista.alecat.swimmanager.models.CompetitionResult;
 import org.altervista.alecat.swimmanager.models.Rank;
 import org.altervista.alecat.swimmanager.models.Swimmer;
-import org.altervista.alecat.swimmanager.models.Timing;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -25,7 +23,7 @@ public class RankManager {
 
     private FinPdfReader finPdfReader;
     private ArrayList<Rank> rankList = null;
-    private String societyName =  null;
+    private String teamName =  null;
     private ArrayList<CompetitionResult> competitionResultsList = null;
     private String competitionName = null;
     private String date = null;
@@ -33,26 +31,33 @@ public class RankManager {
     private int poolMeters = -1;
     private int timingType = -1;
 
-    public RankManager(FinPdfReader finPdfReader, String societyName){
+    public RankManager(FinPdfReader finPdfReader, String teamName){
         this.finPdfReader = finPdfReader;
-        this.societyName = societyName.toUpperCase();
+        this.teamName = teamName.toUpperCase();
     }
 
     public ArrayList<CompetitionResult> getResult(){
         if (competitionResultsList == null){
+            // Create the list
+            competitionResultsList = new ArrayList<CompetitionResult>();
+
             ArrayList<Rank> individualRankList = getIndividualRaceRank();
-            ArrayList<Rank> relayRakList = getRelayRaceRank();
+            ArrayList<Rank> relayRankList = getRelayRaceRank();
+
+
+            Log.v(TAG,"Empty List created!");
 
             // Get Individual race result
-            while (individualRankList.size() != 0){
-                searchIndividualResult(individualRankList.remove(0));
+            for (int i = 0; i < individualRankList.size(); i++){
+                Log.v(TAG, "Search inside rank number: " + i + " of total " + individualRankList.size());
+                searchIndividualResult(individualRankList.get(i));
             }
 
             // Get relay race result
-            /* TODO: Complete
-            while (relayRakList.size() != 0){
-                searchRelayResult(relayRakList.remove(0));
-            }*/
+            for (int i = 0; i < relayRankList.size(); i++){
+               Log.v(TAG, "Search inside relay rank number: " + i + " of total " + relayRankList.size());
+               searchRelayResult(relayRankList.get(i));
+            }
 
         }
         return competitionResultsList;
@@ -92,12 +97,12 @@ public class RankManager {
         return individualRankList;
     }
 
-    public void setSocietyName(String name){
-        societyName = name.toUpperCase();
+    public void setTeamName(String name){
+        teamName = name.toUpperCase();
     }
 
-    public String getSocietyName(){
-        return societyName;
+    public String getTeamName(){
+        return teamName;
     }
 
     public ArrayList<Rank> getAllRank(){
@@ -183,34 +188,88 @@ public class RankManager {
     }
 
     private void searchIndividualResult(Rank rank){
-        // TODO: Complete this method
         Scanner scanner = new Scanner(rank.getRank());
         while (scanner.hasNextLine()){
             String line = scanner.nextLine();
-            if (!line.substring(0,1).equals("-")) {
-                if (line.contains(societyName)) {
+            if (line.contains(teamName)) {
+                if (!line.substring(0,1).equals("-")) {
                     Scanner console = new Scanner(line);
-                    console.useDelimiter(societyName);
-                    String string = console.next();
-                    String timeString = console.next();
-                    Timing time = new Timing(timeString);
-                    Swimmer swimmer = new Swimmer();
+                    Log.v(TAG, "Line: " + line);
+                    console.useDelimiter(teamName);
+                    String string = console.next(); // Ex: "1 1 1 SURNAME NAME 2000 "
+                    String timeString = console.next(); // Ex: " 00:34.1 POINTS"
+                    Scanner timeScanner = new Scanner(timeString);
+                    Timing time = new Timing(timeScanner.next());
+                    // String points = timeScanner.next(); // It can contain "FG", it can also be empty!!
+                    timeScanner.close();
+                    // TODO: Extract Swimmer
+                    Swimmer swimmer = getSwimmer(string);
                     competitionResultsList.add(
                             new CompetitionResult(getCompetitionName(),
                                     getPlace(),
                                     getDate(),
                                     rank.getRace(),
                                     getPoolMeters(),
-                                    swimmer,
                                     time.getTimeMillis(),
-                                    getTimingType()));
+                                    getTimingType(),
+                                    swimmer));
+                    Log.v(TAG, "Added new Result");
+                    console.close();
                 }
             }
         }
         scanner.close();
     }
 
+    private Swimmer getSwimmer(String line){
+        // TODO: Extract Swimmer
+        Scanner scanner = new Scanner(line);
+        scanner.close();
+        return new Swimmer();
+    }
+
     private void searchRelayResult(Rank rank){
-        // TODO: Complete this method
+        Scanner scanner = new Scanner(rank.getRank());
+        while (scanner.hasNextLine()){
+            LinkedList<String> lines = new LinkedList<String>();
+            // Create a group of five lines
+            for (int i = 0; i <= 4 && scanner.hasNextLine(); i++){
+                lines.addLast(scanner.nextLine());
+            }
+            if (lines.getLast().contains(teamName)){
+                if (!lines.getLast().substring(0,1).equals("-")) {
+                    // TODO: Extract Swimmer
+                    // Swimmers
+                    Swimmer swimmer1 = new Swimmer();
+                    Swimmer swimmer2 = new Swimmer();
+                    Swimmer swimmer3 = new Swimmer();
+                    Swimmer swimmer4 = new Swimmer();
+
+                    Scanner timeScanner = new Scanner(lines.getLast());
+                    timeScanner.useDelimiter(teamName);
+                    timeScanner.next(); // Ex: "1 1 1 "
+                    String line = timeScanner.next(); // Ex: " 00:00.000 FG"
+                    timeScanner.close();
+                    Scanner s = new Scanner(line);
+                    String timeString = s.next();
+                    Timing time = new Timing(timeString);
+                    s.close();
+
+                    competitionResultsList.add(
+                            new CompetitionResult(getCompetitionName(),
+                                    getPlace(),
+                                    getDate(),
+                                    rank.getRace(),
+                                    getPoolMeters(),
+                                    time.getTimeMillis(),
+                                    getTimingType(),
+                                    swimmer1,
+                                    swimmer2,
+                                    swimmer3,
+                                    swimmer4));
+                }
+            }
+        }
+        scanner.close();
     }
 }

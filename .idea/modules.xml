@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Swim Manager.iml" filepath="$PROJECT_DIR$/Swim Manager.iml" />
+      <module fileurl="file://C:\Users\Ale\Documents\Android\SwimManager\Swim Manager.iml" filepath="C:\Users\Ale\Documents\Android\SwimManager\Swim Manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SwimManager.iml" filepath="$PROJECT_DIR$/SwimManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

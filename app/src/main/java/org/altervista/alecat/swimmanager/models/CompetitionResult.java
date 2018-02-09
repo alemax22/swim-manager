@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class CompetitionResult {
     private String competitionName;
-    private ArrayList<Swimmer> swimmerList; // If it contains only one swimmer it is an individual race
+    private ArrayList<Swimmer> swimmerList = new ArrayList<Swimmer>(); // If it contains only one swimmer it is an individual race
     private String place;
     private String date;
     private Race race; // 100 Stile Libero
@@ -16,13 +16,15 @@ public class CompetitionResult {
     private long time; // milliseconds
     private int timingType;
 
-    public CompetitionResult(String competitionName, String place, String date, Race race, int poolLength, Swimmer swimmer, long time, int timingType) {
+    public CompetitionResult(String competitionName, String place, String date, Race race, int poolLength, long time, int timingType, Swimmer... swimmer) {
         this.competitionName = competitionName;
         this.place = place;
         this.date = date;
         this.race = race;
         this.poolLength = poolLength;
-        swimmerList.add(swimmer);
+        for (Swimmer swim : swimmer){
+            swimmerList.add(swim);
+        }
         this.time = time;
         this.timingType = timingType;
     }
@@ -97,5 +99,9 @@ public class CompetitionResult {
 
     public void setTimingType(int timingType){
         this.timingType = timingType;
+    }
+
+    public boolean isRelay(){
+        return swimmerList.size() > 1;
     }
 }

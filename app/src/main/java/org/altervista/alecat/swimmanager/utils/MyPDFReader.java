@@ -63,9 +63,9 @@ public class MyPDFReader implements FinPdfReader{
 
     public Rank getRank(String page) throws PdfStructureException{
         // Check PDF form
-        boolean noPageStart = true;
-        boolean noRankStart = true;
-        boolean noPageEnd = true;
+        boolean hasPageStart = false;
+        boolean hasRankStart = false;
+        boolean hasPageEnd = false;
 
         StringBuilder builder1 = new StringBuilder();
         StringBuilder builder2 = new StringBuilder();
@@ -84,31 +84,33 @@ public class MyPDFReader implements FinPdfReader{
 
         // Remove useless line of PDF
         while(scanner.hasNext()
-                && (noPageStart = !isPageBeginning(line = scanner.nextLine()))){
+                && (!(hasPageStart = isPageBeginning(line = scanner.nextLine())))){
            // Go to the next line
         }
         while(scanner.hasNext()
-                && (noRankStart = !isRankBeginnig(line = scanner.nextLine()))
-                && (noPageEnd = !isPageEnding(line))){
+                && hasPageStart
+                && (!(hasRankStart = isRankBeginnig(line = scanner.nextLine())))
+                && (!(hasPageEnd = isPageEnding(line)))){
             builder1.append(line);
             builder1.append(System.getProperty("line.separator")); // Add new line
         }
         while (scanner.hasNext()
-                && (noPageEnd = !isPageEnding(line = scanner.nextLine()))){
+                && hasRankStart
+                && (!(hasPageEnd = isPageEnding(line = scanner.nextLine())))){
             builder2.append(line);
             builder2.append(System.getProperty("line.separator")); // Add new line
         }
 
         Rank rank = new Rank(circuitName);
 
-        if (noPageStart){
+        if (!hasPageStart){
             // The PDF has not the required structure
             throw new PdfStructureException();
         } else {
-            if (noPageEnd) {
+            if (!hasPageEnd) {
                 Log.e(TAG, "The page has no page end! Maybe you are using a wrong PDF");
             }
-            if (noRankStart) {
+            if (!hasRankStart) {
                 builder1.setLength(builder1.length()-1); // Delete last line
                 rank.setRank(builder1.toString());
             } else {

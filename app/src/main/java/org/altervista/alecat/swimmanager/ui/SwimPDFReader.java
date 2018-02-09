@@ -13,21 +13,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.altervista.alecat.swimmanager.R;
-import org.altervista.alecat.swimmanager.data.SwimmerContract;
 import org.altervista.alecat.swimmanager.models.CompetitionResult;
-import org.altervista.alecat.swimmanager.models.Rank;
-import org.altervista.alecat.swimmanager.models.Timing;
 import org.altervista.alecat.swimmanager.utils.MyPDFReader;
 import org.altervista.alecat.swimmanager.utils.RankManager;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SwimPDFReader extends AppCompatActivity {
 
@@ -125,8 +117,12 @@ public class SwimPDFReader extends AppCompatActivity {
                 RankManager rankManager = new RankManager(PDF, "OBIETTIVO ACQUA");
                 ArrayList<CompetitionResult> list = rankManager.getResult();
 
+                Log.v(TAG,"All result found!");
+
                 String out = "";
+                int j = 0;
                 while(!list.isEmpty()){
+                    Log.v(TAG,"Result: "+ j);
                     CompetitionResult result = list.remove(0);
                     out = out + result.getRace() + " " + result.getTime() + "\n";
                 }

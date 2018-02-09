@@ -1,4 +1,4 @@
-package org.altervista.alecat.swimmanager.models;
+package org.altervista.alecat.swimmanager.utils;
 
 import android.util.Log;
 
@@ -41,7 +41,7 @@ public class Timing {
     private Duration time;
 
     public Timing(String time){
-        time = normalizeTimeString(time);
+        time = normalizeTimeString(time.trim());
         if (hasHour(time)){
             this.time = formatterWithHour.parsePeriod(time).toStandardDuration();
         } else {
